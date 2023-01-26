@@ -23,7 +23,6 @@ import static com.mongodb.client.model.Sorts.orderBy;
 public class MongoConnectionManager implements AutoCloseable{
     private static final Logger LOGGER = LogManager.getLogger(MongoConnectionManager.class);
     private static MongoConnectionManager instance = null;
-    private final ConnectionString uri;
     private final MongoClient client;
     private final MongoDatabase database;
     private final Bson idFilter;
@@ -35,7 +34,7 @@ public class MongoConnectionManager implements AutoCloseable{
     private MongoConnectionManager()
     {
         //Create connections String to local instance
-        uri = new ConnectionString(databaseConfiguration.getMongoUri());
+        ConnectionString uri = new ConnectionString(databaseConfiguration.getMongoUri());
         //Create a new connection to mongodb client
         client = MongoClients.create(uri);
         //Connect to mongolibrary database -> Creates db only when we insert a collection, and we insert something in it
@@ -44,8 +43,11 @@ public class MongoConnectionManager implements AutoCloseable{
         idFilter = Filters.eq("_id", new ObjectId(databaseConfiguration.getReportedReviewsId()));
     }
 
+    /**
+     * Instance of MongoConnectionManager
+     * @return MongoConnectionManager
+     */
     public static MongoConnectionManager getInstance() throws MongoException
-    //Singleton Pattern
     {
         try {
             if (instance == null) { instance = new MongoConnectionManager(); }
@@ -56,6 +58,11 @@ public class MongoConnectionManager implements AutoCloseable{
         return instance;
     }
 
+    /**
+     * get the collection with write concern and read preference
+     * @param collection name of the collection in the database
+     * @return the documents of the collection specified
+     */
     public MongoCollection<Document> getCollection(String collection) throws MongoException
     {
         //Creates empty MongoCollection
@@ -78,7 +85,6 @@ public class MongoConnectionManager implements AutoCloseable{
 
     @Override
     public void close()
-    //Terminates the connection
     {
         LOGGER.info("close() | Closing the connection"); //LOG
 
@@ -99,7 +105,7 @@ public class MongoConnectionManager implements AutoCloseable{
         LOGGER.info("findDocumentsOrderedByOneKeyValue() | Searching and sorting in " + collection + ", with key: " + key); //LOG
 
         //Preliminary collection set
-        interestedCollection = database.getCollection(collection);
+        interestedCollection = getCollection(collection);
 
         if (order == -1) {
             return interestedCollection.find().sort(orderBy(descending(key))).skip(pageLength * (pageNumber - 1)).limit(pageLength).iterator();
@@ -122,7 +128,7 @@ public class MongoConnectionManager implements AutoCloseable{
         LOGGER.info("findDocumentsOrderedByOneKeyValue() | Searching and sorting in " + collection + " using regex, with key: " + key + ", the value " +  value); //LOG
 
         //Preliminary collection set
-        interestedCollection = database.getCollection(collection);
+        interestedCollection = getCollection(collection);
 
         Bson filter = regex(key,"^" + value, "i");
 
@@ -149,7 +155,7 @@ public class MongoConnectionManager implements AutoCloseable{
         LOGGER.info("findDocumentsByOneKeyValueAndOrderBySecondKey() | Searching in " + collection + " with key: " + key1 + ", the value " +  value1 + " and sorting by " + key2); //LOG
 
         //Preliminary collection set
-        interestedCollection = database.getCollection(collection);
+        interestedCollection = getCollection(collection);
 
         Bson filter = eq(key1, value1);
 
@@ -172,7 +178,7 @@ public class MongoConnectionManager implements AutoCloseable{
         LOGGER.info("findDocumentByKeyValue() | Searching in " + collection + " with key: " + key + ", the value " +  value); //LOG
 
         //Preliminary collection set
-        interestedCollection = database.getCollection(collection);
+        interestedCollection = getCollection(collection);
 
         //Returns the cursor with all the documents found
         return interestedCollection.find(eq(key, value)).iterator();
@@ -192,7 +198,7 @@ public class MongoConnectionManager implements AutoCloseable{
         LOGGER.info("findDocumentByKeyValue() | Searching in " + collection + " with keys " + key1 + " and " + key2 + ", the values " +  value1 + " and " + value2); //LOG
 
         //Preliminary collection set
-        interestedCollection = database.getCollection(collection);
+        interestedCollection = getCollection(collection);
 
         Bson filter1 = Filters.eq(key1, value1);
         Bson filter2 = Filters.eq(key2, value2);
@@ -211,7 +217,7 @@ public class MongoConnectionManager implements AutoCloseable{
         LOGGER.info("findEmbeddedDocumentByKeyValue() | Searching in " + collection + " with key: " + key + ", the document " +  value); //LOG
 
         //Preliminary collection set
-        interestedCollection = database.getCollection(collection);
+        interestedCollection = getCollection(collection);
 
         return interestedCollection.find(eq(key, Document.parse(value.toJson()))).iterator();
     }
@@ -228,7 +234,7 @@ public class MongoConnectionManager implements AutoCloseable{
     {
         LOGGER.info("addElement() | Adding to the " + collection + ", the document " + element); //LOG
 
-        interestedCollection = database.getCollection(collection);
+        interestedCollection = getCollection(collection);
         interestedCollection.insertOne(element);
     }
 
@@ -245,7 +251,7 @@ public class MongoConnectionManager implements AutoCloseable{
         LOGGER.info("addElementToList() | In collection " + collection + ", adding to the document with key " + key + " and value " + value + ", the element " + listObject + "to the list " + List); //LOG
 
         //Preliminary collection set
-        interestedCollection = database.getCollection(collection);
+        interestedCollection = getCollection(collection);
 
         Bson filter = Filters.eq(key, value);
         Bson update = Updates.push(List, listObject);
@@ -267,7 +273,7 @@ public class MongoConnectionManager implements AutoCloseable{
         LOGGER.info("addElementToList() | In collection " + collection + ", adding to the document with keys " + key1 + ", " + key2 + " and values " +  value1 + ", " + value2 + ", the element " + listObject + "to the list " + List); //LOG
 
         //Preliminary collection set
-        interestedCollection = database.getCollection(collection);
+        interestedCollection = getCollection(collection);
 
         Bson filter1 = Filters.eq(key1, value1);
         Bson filter2 = Filters.eq(key2, value2);
@@ -288,7 +294,7 @@ public class MongoConnectionManager implements AutoCloseable{
         LOGGER.info("removeElement() | In collection " + collection + ", removing the element with key " + key + " and  value " +  value); //LOG
 
         //Preliminary collection set
-        interestedCollection = database.getCollection(collection);
+        interestedCollection = getCollection(collection);
 
         Bson filter = Filters.eq(key, value);
         interestedCollection.deleteOne(filter);
@@ -307,7 +313,7 @@ public class MongoConnectionManager implements AutoCloseable{
         LOGGER.info("removeElement() | In collection " + collection + "removing the element with keys " + key1 + ", " + key2 + " and values " + value1 + ", " + value2); //LOG
 
         //Preliminary collection set
-        interestedCollection = database.getCollection(collection);
+        interestedCollection = getCollection(collection);
 
         Bson filter1 = Filters.eq(key1, value1);
         Bson filter2 = Filters.eq(key2, value2);
@@ -327,7 +333,7 @@ public class MongoConnectionManager implements AutoCloseable{
         LOGGER.info("removeElementFromList() | In collection " + collection + "removing the element " + listObject + " from " + list + " in document with key" + key + " and value " + value); //LOG
 
         //Preliminary collection set
-        interestedCollection = database.getCollection(collection);
+        interestedCollection = getCollection(collection);
 
         Bson filter = Filters.eq(key, value);
         Bson update = Updates.pull(list, listObject);
@@ -349,7 +355,7 @@ public class MongoConnectionManager implements AutoCloseable{
         LOGGER.info("removeElementFromList() | In collection " + collection + "removing the element " + listObject + " from " + list + " in document with keys" + key1 + ", " + key2 + " and values " + value1 + ", " + value2); //LOG
 
         //Preliminary collection set
-        interestedCollection = database.getCollection(collection);
+        interestedCollection = getCollection(collection);
 
         Bson filter1 = Filters.eq(key1, value1);
         Bson filter2 = Filters.eq(key2, value2);
@@ -369,7 +375,7 @@ public class MongoConnectionManager implements AutoCloseable{
     public void removeElementFromEmbeddedDocumentList(String collection, String documentKey, String documentValue, String documentList, String embeddedKey, String embeddedValue) throws MongoException
     {
         //Preliminary collection set
-        interestedCollection = database.getCollection(collection);
+        interestedCollection = getCollection(collection);
 
         //Filter to know on which document we need to remove one element
         Bson filter1 = Filters.eq(documentKey, documentValue);
@@ -397,7 +403,7 @@ public class MongoConnectionManager implements AutoCloseable{
         LOGGER.info("updateOneDocumentByKeyValue() | In collection " + collection + " updating " + keyToUpdate + " with value "+ valueUpdated + " of document with key " + key + " and value " +  value); //LOG
 
         //Preliminary collection set
-        interestedCollection = database.getCollection(collection);
+        interestedCollection = getCollection(collection);
 
         interestedCollection.updateOne(Filters.eq(key, value), Updates.set(keyToUpdate, valueUpdated));
     }
@@ -417,7 +423,7 @@ public class MongoConnectionManager implements AutoCloseable{
         LOGGER.info("updateOneDocumentByKeyValue() | In collection " + collection + " updating the list " + list + " with  "+ listObject + " of document with keys " + key1 + ", " + key2 + " and values " +  value1 + ", " + value2); //LOG
 
         //Preliminary collection set
-        interestedCollection = database.getCollection(collection);
+        interestedCollection = getCollection(collection);
 
         Bson filter1 = Filters.eq(key1, value1);
         Bson filter2 = Filters.eq(key2, value2);
@@ -443,7 +449,7 @@ public class MongoConnectionManager implements AutoCloseable{
         LOGGER.info("findReportedReview() | Searching " + username + ", " + bookTitle); //LOG
 
         //Preliminary collection set
-        interestedCollection = database.getCollection("admins");
+        interestedCollection = getCollection("admins");
         Bson usernameFilter = Filters.eq("reportedReviews.username", username);
         Bson bookFilter = Filters.eq("reportedReviews.bookTitle", bookTitle);
         return interestedCollection.find(and(idFilter, and(usernameFilter, bookFilter))).iterator();
@@ -461,7 +467,7 @@ public class MongoConnectionManager implements AutoCloseable{
         LOGGER.info("findReportedReview() | Searching " + username + ", " + bookTitle + " and " + reporter); //LOG
 
         //Preliminary collection set
-        interestedCollection = database.getCollection("admins");
+        interestedCollection = getCollection("admins");
         Bson usernameFilter = Filters.eq("reportedReviews.username", username);
         Bson bookFilter = Filters.eq("reportedReviews.bookTitle", bookTitle);
         Bson reporterFilter = Filters.in("reportedReviews.reportedBy", reporter);
@@ -477,7 +483,7 @@ public class MongoConnectionManager implements AutoCloseable{
         LOGGER.info("addReportedReview() | Adding in reported reviews, the review " + reportedReview);
 
         //Preliminary collection set
-        interestedCollection = database.getCollection("admins");
+        interestedCollection = getCollection("admins");
 
         Bson update = Updates.push("reportedReviews", reportedReview);
         interestedCollection.findOneAndUpdate(idFilter, update);
@@ -494,7 +500,7 @@ public class MongoConnectionManager implements AutoCloseable{
         LOGGER.info("addNameToReportedReview() | Adding in reported reviews, to the review " + username + ", " + bookTitle + " the name " + reporter);
 
         //Preliminary collection set
-        interestedCollection = database.getCollection("admins");
+        interestedCollection = getCollection("admins");
         Bson usernameFilter = Filters.eq("reportedReviews.username", username);
         Bson bookFilter = Filters.eq("reportedReviews.bookTitle", bookTitle);
         Bson update = Updates.push("reportedReviews.$.reportedBy", reporter);
@@ -511,7 +517,7 @@ public class MongoConnectionManager implements AutoCloseable{
         LOGGER.info("removeReportedReview() | Removing from reported reviews, the review " + username + ", " + bookTitle);
 
         //Preliminary collection set
-        interestedCollection = database.getCollection("admins");
+        interestedCollection = getCollection("admins");
         Bson usernameFilter = Filters.eq("username", username);
         Bson bookFilter = Filters.eq("bookTitle", bookTitle);
         Bson update = Updates.pull("reportedReviews", and(usernameFilter, bookFilter));
@@ -586,12 +592,12 @@ public class MongoConnectionManager implements AutoCloseable{
     {
         LOGGER.info("atomicAddBookToBorrowingList() | updating " + username + "'s borrowing list adding the book "+ bookTitle);
 
-        int newcopies = findDocumentByKeyValue("books", "Title", bookTitle).next().getInteger("copies") - 1;
+        int newCopies = findDocumentByKeyValue("books", "Title", bookTitle).next().getInteger("copies") - 1;
         //Adds the book to the borrowing list of the user
         addElementToList("customers", "username", username, "borrowingList", borrowedBook);
         try {
             //Updates the book copies in the DB
-            updateOneDocumentByKeyValue("books", "Title", bookTitle, "copies", newcopies);
+            updateOneDocumentByKeyValue("books", "Title", bookTitle, "copies", newCopies);
         } catch (MongoException me){
             LOGGER.error("atomicAddBookToBorrowingList() | error during the function: " + me.getMessage());
             //Rollback of the previous action, therefore we remove the book from the borrowing list
@@ -599,7 +605,7 @@ public class MongoConnectionManager implements AutoCloseable{
             //We propagate it to avoid adding the borrowed book to neo4j
             throw new MongoException(me.getMessage());
         }
-        return newcopies;
+        return newCopies;
     }
 
     /**
@@ -688,7 +694,7 @@ public class MongoConnectionManager implements AutoCloseable{
         LOGGER.info("mostBorrowedBooksBasedOnTimeAndBirthYear() | Searching top books borrowed in time period between "+ startDate + " and " + endDate + " by people born between " + startYear + " and "+ finalYear);
 
         //Preliminary collection set
-        interestedCollection = database.getCollection("customers");
+        interestedCollection = getCollection("customers");
 
         //Filter users based on their birth year
         Bson start = Filters.gte("birthYear", startYear);
@@ -728,7 +734,7 @@ public class MongoConnectionManager implements AutoCloseable{
         LOGGER.info("averageNumberOfBorrowedBooksPerUserNationalityInAPeriod() | Calculating average number of borrewed books by nationality between "+ startDate + " and " + endDate);
 
         //Preliminary collection set
-        interestedCollection = database.getCollection("customers");
+        interestedCollection = getCollection("customers");
 
         //Filter borrowing list's books based on their borrow date
         Bson startTime = Filters.gte("borrowingList.borrowdate", startDate);
@@ -769,7 +775,7 @@ public class MongoConnectionManager implements AutoCloseable{
         LOGGER.info("usersThatWroteTheMostLikedReviewsInATimePeriodWithAScore() | Searching the users who wrote the most liked reviews between "+ startDate + " and " + endDate);
 
         //Preliminary collection set
-        interestedCollection = database.getCollection("reviews");
+        interestedCollection = getCollection("reviews");
 
         //Filter for the score
         Bson scoreFilter = Filters.eq("score", score);
@@ -813,7 +819,7 @@ public class MongoConnectionManager implements AutoCloseable{
         LOGGER.info("averageNumberOfLikesPerReviewOfBooksInAPeriod() | Calculating the average number of likes per review of books between "+ startDate + " and " + endDate);
 
         //Preliminary collection set
-        interestedCollection = database.getCollection("reviews");
+        interestedCollection = getCollection("reviews");
 
         //Filter reviews in the time period given
         Bson dateFilter1 = Filters.gte("reviewTime", startDate);
@@ -852,7 +858,7 @@ public class MongoConnectionManager implements AutoCloseable{
         LOGGER.info("highestRatedBooksBasedOnKeyValue() | Searching top rated books with key " + key + ",value " + value);
 
         //Preliminary collection set
-        interestedCollection = database.getCollection("books");
+        interestedCollection = getCollection("books");
         //Filter books based on author or publisher
         Bson filter = regex(key,"^" + value, "i"); //key = "authors", "publisher" or anything that is a string; value = any name
         //Sorting books by score
@@ -878,7 +884,7 @@ public class MongoConnectionManager implements AutoCloseable{
         String collection = "books";
         String documentKey = "Title";
         //Preliminary collection set
-        interestedCollection = database.getCollection(collection);
+        interestedCollection = getCollection(collection);
         //Filter by bookTitle
         Bson filter1 = Filters.eq(documentKey, bookTitle);
 
@@ -923,7 +929,7 @@ public class MongoConnectionManager implements AutoCloseable{
         LOGGER.info("findAllReportedReviewsSorted() | Sorting all reported reviews");
 
         //Preliminary collection set
-        interestedCollection = database.getCollection("admins");
+        interestedCollection = getCollection("admins");
         Bson sortStage = Sorts.descending("numberOfReports");
 
         //Returns only sorted embedded documents
