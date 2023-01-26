@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Reading List</title>
+    <link th:href="@{/styles/bootstrap.min.css}" rel="stylesheet">
+</head>
+
+<body class="text-center flex-column">
+
+<th:block th:if="${userClass == 'admin'}">
+    <div th:replace="~{fragments/headerAdmin :: header}">...</div>
+</th:block>
+<th:block th:if="${userClass == 'customer'}">
+    <div th:replace="~{fragments/headerUser :: header}">...</div>
+</th:block>
+
+
+
+<div class="container m-auto">
+    <form class="form-check-inline flex-row" th:action="@{/viewUsers/search{username}}" method="post">
+        <div class="form-floating">
+            <input type="text" name="username" id="search" class=" form-control w-50 m-auto" style="padding: 5px"/>
+        </div>
+        <div class="form-floating">
+            <button class=" btn btn-primary mb-2 mt-2 " type="submit">Search</button>
+        </div>
+    </form>
+    <div class="row m-auto">
+        <div class="col-lg-10 mt-5 mb-5 m-auto">
+            <table id="example" class="table table-bordered" style="width: 100%">
+                <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Action1</th>
+                    <th>Action2</th>
+                    <th:block th:if="${userClass == 'customer'}">
+                        <th>Follow</th>
+                    </th:block>
+                    <th:block th:if="${userClass == 'admin'}">
+                        <th>Status</th>
+                        <th>Edit</th>
+                    </th:block>
+
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="customer : ${customers}">
+                 <!--   <td th:text="${customer.username}">Tile</td> -->
+                    <td><a th:href="@{/profile{username}(username=${customer.username})}" th:text="${customer.username}" style="color: black"></a></td>
+                    <td th:text="${customer.email}">Authors</td>
+                    <td>
+                        <form th:action="@{/borrowingList{username}(username = ${customer.username})}" method="get">
+                            <button class="btn btn-primary btn-sm" type="submit">Borrowing List</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form th:action="@{/readingList{usernamee}(usernamee = ${customer.username})}" method="get">
+                            <button class="btn btn-primary btn-sm" type="submit">Reading List</button>
+                        </form>
+                    </td>
+                    <td th:if="${userClass == 'customer'}">
+                        <form th:action="@{/follow{username}(username = ${customer.username})}" method="get">
+                            <button class="btn btn-primary btn-sm" type="submit">Follow</button>
+                        </form>
+                    </td>
+                    <th:block th:if="${userClass == 'admin'}">
+                        <td th:if="${customer.status == true}" th:text="Active">Status</td>
+                        <td th:if="${customer.status == false}" th:text="Banned">Status</td>
+                        <td>
+                            <form th:action="@{/changeStatus}" method="get">
+                                <button class="btn btn-primary btn-sm" type="submit">Ban/Unban</button>
+                            </form>
+                        </td>
+                    </th:block>
+
+                </tr>
+                </tbody>
+            </table>
+
+            <nav aria-label="Page navigation" class="paging mb-3" th:if="${mode == 'viewAll'}">
+                <ul class="pagination">
+                    <li class="page-item" th:classappend="${pageNumber.intValue() <= 1 ? 'disabled' : ''}">
+                        <a class="page-link" th:href="@{'/viewUsers?pageNumber=' + ${pageNumber - 1}}">Previous</a>
+                    </li>
+
+                    <li class="page-item disabled">
+                        <a class="page-link" th:href="@{'/viewUsers?pageNumber=' + ${pageNumber}}"
+                           th:text="${pageNumber}"></a>
+                    </li>
+
+                    <li class="page-item">
+                        <a class="page-link" th:href="@{'/viewUsers?pageNumber=' + ${pageNumber + 1}}">Next</a>
+                    </li>
+                    <li>
+                        <form style="margin-left: 1em" th:action="@{/viewUsers}">
+                            <label for="page">Go to page</label>
+                            <input class="input-group-sm" type="number" name="pageNumber" id="page"/>
+                            <button type="submit" class="btn btn-sm btn-primary">Go</button>
+                        </form>
+                    </li>
+                </ul>
+
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+
+
+</body>
+</html>

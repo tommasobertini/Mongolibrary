@@ -1,0 +1,27 @@
+
+
+
+
+  <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-0 mb-4 p-5 border-bottom mt-0 w-100" th:fragment="header">
+    <a href="#" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
+      <img th:src="@{/images/logo2.png}" alt="logo" width="50%">
+    </a>
+
+    <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+      <li><a th:href="@{/admin}" class="nav-link px-2 link-secondary fs-3">Home</a></li>
+      <li><a th:href="@{/addBook}" class="nav-link px-2 link-secondary fs-3">Add</a></li>
+      <li><a th:href="@{/searchBook}" class="nav-link px-2 link-secondary fs-3">Search</a></li>
+      <li><a th:href="@{/viewBooks}" class="nav-link px-2 link-secondary fs-3">Books</a></li>
+      <li><a th:href="@{/viewUsers}" class="nav-link px-2 link-secondary fs-3">Users</a></li>
+      <li><a th:href="@{/analytics}" class="nav-link px-2 link-secondary fs-3">Analytics</a></li>
+    </ul>
+
+    <div class="col-md-3 text-end">
+
+      <form  th:action="@{/logout}" method="get">
+        <button type="submit" class="btn btn-outline-danger me-2">Logout</button>
+      </form>
+    </div>
+
+  </header>
+

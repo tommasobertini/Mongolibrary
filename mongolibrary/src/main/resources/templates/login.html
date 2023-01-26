@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Login</title>
+        <link th:href="@{/styles/signin.css}" rel="stylesheet">
+        <link th:href="@{/styles/bootstrap.min.css}" rel="stylesheet">
+
+    </head>
+    <body class="text-center">
+
+    <main class="form-signin w-100 m-auto">
+        <img class="mb-5" th:src="@{/images/logo2.png}" alt="logo" width="90%">
+        <form th:action="@{/login}" method="post">
+            <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+
+            <span th:if="${info == 'error'}" th:text="${infoMessage}" style="color: red">...</span>
+            <span th:if="${info == 'signup'}" th:text="${infoMessage}" style="color: green">...</span>
+
+            <div class="form-floating">
+                <input type="text" name="username" id="inputUsername" class="form-control" placeholder="Username" required="required" />
+                <label for="inputUsername" class="sr-only">Username</label>
+            </div>
+            <div class="form-floating">
+                <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required="required" />
+                <label for="inputPassword" class="sr-only">Password</label>
+
+            </div>
+            <div>
+                <label for="admin-class"><input type="radio"  name="user-class" id="admin-class" value="admins">Librarian</label>
+                <label for="customer-class"><input type="radio" name="user-class" id="customer-class" value="customers" checked="checked">User</label>
+            </div>
+            <br>
+
+            <button class="w-100 btn btn-lg btn-primary mb-2" type="submit">Sign in</button>
+
+        </form>
+        <form th:action="@{/signup}" method="get">
+            <button class="btn-success btn-block w-100 btn btn-lg mt-2" type="Submit">Signup Here</button>
+        </form>
+    </main>
+
+    </body>
+</html>
+

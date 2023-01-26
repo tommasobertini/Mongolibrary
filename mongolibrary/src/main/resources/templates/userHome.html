@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Home</title>
+    <link th:href="@{/styles/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/styles/signin.css}" rel="stylesheet">
+</head>
+
+
+<body class="text-center flex-column">
+
+    <div th:replace="~{fragments/headerUser :: header}">...</div>
+
+
+    <main class="list-group-horizontal-md w-200 m-auto">
+        <h1 class="title mb-5" th:text="'Welcome ' + ${sessionUsername} + ' !'">...</h1>
+        <!--
+          <p>Click <a th:href="@{/addBook}">here</a> to add a new book.</p>
+        -->
+        <div class="form-signin">
+
+            <form  th:action="@{/searchBook}" method="get">
+                <button class="w-100 btn btn-lg btn-primary mb-4" type="submit">Search Books</button>
+            </form>
+            <form th:action="@{/viewBooks}" method="get">
+                <button class="w-100 btn btn-lg btn-primary mb-4" type="submit">View Books</button>
+            </form>
+            <form th:action="@{/readingList{username}(username = ${sessionUsername})}" method="get">
+                <button class="w-100 btn btn-lg btn-primary mb-4" type="submit">Reading List</button>
+            </form>
+            <form th:action="@{/borrowingList{username}(username = ${sessionUsername})}" method="get">
+                <button class="w-100 btn btn-lg btn-primary mb-4" type="submit">Borrowing List</button>
+            </form>
+            <form th:action="@{/viewUsers}" method="get">
+                <button class="w-100 btn btn-lg btn-primary mb-4" type="submit">Users List</button>
+            </form>
+            <form th:action="@{/profile{username}(username = ${sessionUsername})}" method="get">
+                <button class="w-100 btn btn-lg btn-primary mb-4" type="submit">My Profile</button>
+            </form>
+            <form th:action="@{/suggestions}" method="get">
+                <button class="w-100 btn btn-lg btn-primary mb-4" type="submit">Suggestions</button>
+            </form>
+        </div>
+    </main>
+
+</body>
+</html>

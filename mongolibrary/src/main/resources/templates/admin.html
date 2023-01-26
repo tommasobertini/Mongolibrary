@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Admin Panel</title>
+  <link th:href="@{/styles/bootstrap.min.css}" rel="stylesheet">
+  <link th:href="@{/styles/signin.css}" rel="stylesheet">
+</head>
+
+
+
+
+<body class="text-center flex-column">
+
+<div th:replace="~{fragments/headerAdmin :: header}">...</div>
+
+
+  <main class="list-group-horizontal-md w-200 m-auto">
+    <h1 class="title mb-5" th:text="'Welcome ' + ${sessionUsername} + ' !'">Welcome Admin!</h1>
+
+    <div class="form-signin">
+
+      <form th:action="@{/addBook}" method="get">
+        <button class="w-100 btn btn-lg btn-primary mb-4" type="submit">Add Book</button>
+      </form>
+      <form  th:action="@{/searchBook}" method="get">
+        <button class="w-100 btn btn-lg btn-primary mb-4" type="submit">Search Books</button>
+      </form>
+      <form th:action="@{/viewBooks}" method="get">
+        <button class="w-100 btn btn-lg btn-primary mb-4" type="submit">View Books</button>
+      </form>
+      <form th:action="@{/viewReportedReviews}" method="get">
+        <button class="w-100 btn btn-lg btn-primary mb-4" type="submit">Reported Reviews</button>
+      </form>
+      <form th:action="@{/viewUsers}" method="get">
+        <button class="w-100 btn btn-lg btn-primary mb-4" type="submit">Users List</button>
+      </form>
+      <form th:action="@{/analytics}" method="get">
+        <button class="w-100 btn btn-lg btn-primary mb-4" type="submit">View Analytics</button>
+      </form>
+
+    </div>
+
+  </main>
+</body>
+</html>

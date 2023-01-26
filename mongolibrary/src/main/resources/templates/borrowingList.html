@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Reading List</title>
+  <link th:href="@{/styles/bootstrap.min.css}" rel="stylesheet">
+</head>
+
+<body class="text-center flex-column">
+
+<th:block th:if="${userClass == 'admin'}">
+  <div th:replace="~{fragments/headerAdmin :: header}">...</div>
+</th:block>
+<th:block th:if="${userClass == 'customer'}">
+  <div th:replace="~{fragments/headerUser :: header}">...</div>
+</th:block>
+
+<h2 th:text="'Borrowing List of ' + ${username}">Reading List</h2>
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-10 mt-5 mb-5">
+      <table id="example" class="table table-bordered" style="width: 100%">
+        <thead>
+        <tr>
+          <th>Image</th>
+          <th>Title</th>
+          <th:block th:if="${username == sessionUsername}">
+            <th>Borrow Date</th>
+            <th>Return Date</th>
+            <th>Status</th>
+          </th:block>
+
+
+        </tr>
+        </thead>
+        <tbody>
+        <th:block th:if="${username == sessionUsername}">
+          <tr th:each="book : ${books}">
+            <td>img</td>
+            <td><a th:href="@{'/bookDetails?title=' + ${book.bookTitle}}" th:text="${book.bookTitle}" style="color: black"></a></td>
+            <td th:text="${book.borrowDate}">borrowdate</td>
+            <td th:text="${book.returnDate}">returndate</td>
+            <td th:text="${book.status}">status</td>
+
+          </tr>
+        </th:block>
+        <th:block th:unless="${username == sessionUsername}">
+          <tr th:each="book : ${books}">
+            <td>img</td>
+            <td><a th:href="@{'/bookDetails?title=' + ${book}}" th:text="${book}" style="color: black"></a></td>
+          </tr>
+        </th:block>
+
+        </tbody>
+      </table>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+
+<script>
+
+
+</script>
+
+</body>
+</html>

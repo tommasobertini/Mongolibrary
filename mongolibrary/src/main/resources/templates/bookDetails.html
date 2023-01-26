@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<!--
+    <link rel="stylesheet" href="../bootstrap-3.3.4/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="../Flat-UI-master/dist/css/flat-ui.min.css"/>
+
+    <script src="../bootstrap-3.3.4/dist/js/jquery-1.11.3.min.js"></script>
+    <script src="../bootstrap-3.3.4/dist/js/bootstrap.min.js"></script>
+    <script src="../Flat-UI-master/dist/js/flat-ui.min.js"></script>
+    -->
+    <link rel="stylesheet" th:href="@{/styles/star.css}">
+    <link th:href="@{/styles/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/styles/signin.css}" rel="stylesheet">
+
+    <title>Book Details</title>
+    <style>
+
+    .row{
+        margin-top: 20px;;
+    }
+    .center{
+        text-align: center;
+    }
+    .pagination{
+        background: #cccccc;
+    }
+
+    .reviews-container{
+        background: white;
+        display: block;
+    }
+
+    .reviews-box{
+        overflow-y: scroll;
+        overflow-x: hidden;
+        max-height: 50vh;
+        margin-top: 2em;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .review{
+        border: 1px solid black;
+        border-radius: 1em;
+        margin: 1em;
+        padding: 1em;
+        width: 50%;
+    }
+
+
+
+    .img-box{
+        width: 100%;
+    }
+
+
+
+    .details{
+        display: flex;
+        flex-direction: column;
+        gap: 1em;
+    }
+
+    /*
+    label{
+        font-weight: bold;
+    }*/
+
+    .review-element{
+        display: flex;
+        flex-direction: row;
+        gap: 2em;
+    }
+
+    .buttons{
+        display: flex;
+        flex-direction: row;
+    }
+
+
+    .rating{
+        color: #deb217;
+        font-size: 2em;
+    }
+
+</style>
+
+</head>
+</head>
+
+<body class="text-center flex-column">
+    <th:block th:if="${userClass == 'admin'}">
+        <div th:replace="~{fragments/headerAdmin :: header}">...</div>
+    </th:block>
+    <th:block th:if="${userClass == 'customer'}">
+        <div th:replace="~{fragments/headerUser :: header}">...</div>
+    </th:block>
+
+    <div class="info-container w-75 m-auto flex-row">
+
+        <div class="img-box mb-4">
+            <img style="width: 25%; height: 25%;" alt="100%x200" th:src="@{/images/book-sample.png}" >
+        </div>
+        <div class="flex flex-column gap-1">
+            <h1 th:text="${book.title}" >Title</h1>
+            <h3 th:text="${book.authors}"></h3>
+            <h4 th:text="${book.categories}"></h4>
+
+
+            <th:block th:each="i: ${#numbers.sequence(0, book.score - 1)}">
+                <span class="rating">★</span>
+            </th:block>
+
+            <p class="mt-3" th:text="${book.description}"></p>
+
+            <h4 th:text="'Copies available: ' + ${book.copies}"}></h4>
+
+            <div class="flex-row text-center mb-5">
+
+                <th:block th:if="${userClass == 'customer'}">
+
+                    <form th:action="@{/bookDetails{titlee}/addReadingList(titlee = ${book.title})}" method="get">
+                        <button class="btn-success btn-block  btn  mt-2" type="submit" >Add in reading list</button>
+                    </form>
+
+                    <form  th:action="@{/bookDetails{titlee}/addBorrowingList(titlee = ${book.title})}" method="get">
+                        <!--<p th:text="${book.title}" style="display: none" ></p>-->
+                        <button class="btn-success btn-block  btn  mt-2" type="Submit">Add in borrowing list</button>
+                    </form>
+                </th:block>
+
+
+            </div>
+
+        </div>
+    </div>
+
+    <span class="mb-5" th:if="${info == 'addReadingList'}" th:text="${infoMessage}" style="color: green">...</span>
+    <span class="mb-5" th:if="${info == 'addBorrowingList'}" th:text="${infoMessage}" style="color: green">...</span>
+    <span class="mb-5" th:if="${info == 'error'}" th:text="${infoMessage}" style="color: red">...</span>
+    <span class="mb-5" th:if="${info == 'addReview'}" th:text="${infoMessage}" style="color: green">...</span>
+    <span class="mb-5" th:if="${info == 'reportReview'}" th:text="${infoMessage}" style="color: green">...</span>
+    <span class="mb-5" th:if="${info == 'like'}" th:text="${infoMessage}" style="color: green">...</span>
+
+    <div class="reviews-container w-75 m-auto">
+        <h4 class="mt-3">Reviews</h4>
+
+        <th:block th:if="${userClass == 'customer'}" >
+            <div class="form-signin w-100 m-auto">
+                <form  th:action="@{/addReview}" method="post">
+
+                    <div class="form-floating">
+                        <input type="text" name="bookTitle" id="inputTitle" class="form-control" th:value="${book.title}" required="required" contenteditable="false" />
+                        <label for="inputTitle" class="sr-only">Title</label>
+                    </div>
+                    <div class="form-floating">
+                        <textarea rows="4" cols="50" name="description" id="inputDescription" class="form-control" placeholder="Description" required="required"></textarea>
+                        <label for="inputDescription" class="sr-only">Description</label>
+                    </div>
+
+
+                    <div class="rate">
+                        <input type="radio" id="star5" name="rate" value="5" />
+                        <label for="star5" title="text">5 stars</label>
+                        <input type="radio" id="star4" name="rate" value="4" />
+                        <label for="star4" title="text">4 stars</label>
+                        <input type="radio" id="star3" name="rate" value="3" />
+                        <label for="star3" title="text">3 stars</label>
+                        <input type="radio" id="star2" name="rate" value="2" />
+                        <label for="star2" title="text">2 stars</label>
+                        <input type="radio" id="star1" name="rate" value="1" />
+                        <label for="star1" title="text">1 star</label>
+                    </div>
+                    <br/>
+                    <button class="w-100 btn btn-lg btn-primary mb-2" type="submit">Add Review</button>
+                </form>
+            </div>
+        </th:block>
+
+
+
+        <div class="reviews-box">
+
+            <div class="review" th:each="review : ${reviews}">
+                <div class="review-element">
+                    <label>User: </label>
+                    <p th:text="${review.username}"></p>
+                </div>
+
+                <div class="review-element">
+                    <label>Score: </label>
+                    <div class="rate">
+                        <th:block th:each="i: ${#numbers.sequence(0, review.score - 1)}">
+                            <span class="rating">★</span>
+                        </th:block>
+                    </div>
+                </div>
+
+                <div class="review-element">
+                    <label>Description: </label>
+                    <p th:text="${review.description}"></p>
+                </div>
+                <div class="review-element">
+                    <label>Date: </label>
+                    <p th:text="${review.reviewTime}"></p>
+                </div>
+                <form th:action="@{/report{username}/{title}/{description}(username = ${review.username}, title=${review.bookTitle}, description=${review.description})}" method="get">
+                    <button type="submit">Report</button>
+                </form>
+                <form th:action="@{/like{username}/{title}(username = ${review.username}, title=${review.bookTitle})}" method="get">
+                    <button type="submit">Like</button>
+                </form>
+
+            </div>
+
+
+        </div>
+    </div>
+    </div>
+
+
+<!--
+
+<div layout:fragment="content" >
+    <div class="info-container" style="margin-top: 50rem">
+        <div class="img-box">
+            <img style="width: 20rem; height: 35rem; display: block;" alt="100%x200" th:src="@{/images/book-sample.png}" >
+        </div>
+        <div class="details">
+            <h1 th:text="${book.title}" >Title</h1>
+            <h3 th:text="${book.authors}"></h3>
+            <div class="rate">
+
+                <th:block th:each="i: ${#numbers.sequence(0, book.score - 1)}">
+                    <span class="rating">★</span>
+
+                </th:block>
+
+            </div>
+
+            <p th:text="${book.description}"></p>
+
+            <div class="buttons">
+                <form class="form-signin" th:action="@{/bookDetails(title=${book.title})/addReadingList}" method="get">
+                    <p th:text="${book.title}" style="display: none" name="title"></p>
+                    <button class="btn btn-md btn-primary btn-block" type="Submit">Add in reading list</button>
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="reviews-container">
+        <h4>Reviews</h4>
+
+        <form class="form-signin" th:action="@{/addReview}" method="post">
+
+
+
+                <label for="inputTitle" class="sr-only">Title</label>
+                <input type="text" name="bookTitle" id="inputTitle" class="form-control" th:value="${book.title}" required="required" contenteditable="false" />
+
+
+            <textarea rows="4" cols="50" name="description" id="inputDescription" class="form-control" placeholder="Description" required="required"></textarea>
+
+
+                <div class="rate">
+                <input type="radio" id="star5" name="rate" value="5" />
+                <label for="star5" title="text">5 stars</label>
+                <input type="radio" id="star4" name="rate" value="4" />
+                <label for="star4" title="text">4 stars</label>
+                <input type="radio" id="star3" name="rate" value="3" />
+                <label for="star3" title="text">3 stars</label>
+                <input type="radio" id="star2" name="rate" value="2" />
+                <label for="star2" title="text">2 stars</label>
+                <input type="radio" id="star1" name="rate" value="1" />
+                <label for="star1" title="text">1 star</label>
+            </div>
+            <br/>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Add Review</button>
+        </form>
+
+
+
+        <div class="reviews-box">
+
+
+            <div class="review" th:each="review : ${reviews}">
+                <div class="review-element">
+                    <label>User: </label>
+                    <p th:text="${review.username}"></p>
+                </div>
+
+                <div class="review-element">
+                    <label>Score: </label>
+                    <div class="rate">
+                        <th:block th:each="i: ${#numbers.sequence(0, review.score - 1)}">
+                            <span class="rating">★</span>
+                        </th:block>
+                    </div>
+                </div>
+
+                <div class="review-element">
+                    <label>Description: </label>
+                    <p th:text="${review.description}"></p>
+                </div>
+                <div class="review-element">
+                    <label>Date: </label>
+                    <p th:text="${review.reviewTime}"></p>
+                </div>
+
+                <button>Report</button>
+                <button>Like</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+-->
+</body>
+
+<!--
+<body class="text-center">
+<div layout:fragment="content">
+  <h1>Books</h1>
+
+    <p>Click <a th:href="@{/addBook}">here</a> to add a new book.</p>
+
+  <form class="form-signin" th:action="@{/addBook}" method="get">
+    <button class="btn btn-md btn-primary btn-block" type="Submit">Add Book</button>
+  </form>
+  <form class="form-signin" th:action="@{/searchBook}" method="get">
+    <button class="btn btn-md btn-primary btn-block" type="Submit">Search Books</button>
+  </form>
+  <form class="form-signin" th:action="@{/viewBooks}" method="get">
+    <button class="btn btn-md btn-primary btn-block" type="Submit">View Books</button>
+  </form>
+
+
+</div> -->
+
+
+<!--
+<body class="text-center">
+
+
+<div layout:fragment="content">
+    <div class="container" >
+        <div class="jumbotron">
+            <h1>Books</h1>
+
+        </div>
+
+
+        <div class="row">
+
+            <div class="col-sm-4 col-md-3" >
+                <div class="thumbnail" >
+                    <a href="BookInfo.html">
+                        <img style="width: 100%; height: 300px; display: block;" alt="100%x200" th:src="@{/images/bookSample.jpg}" >
+                    </a>
+                    <div class="caption center">
+                        <h3>Diocane</h3>
+
+                        <p><a class="btn btn-primary btn-block" role="button" href="#">Details</a></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-4 col-md-3"th:each="book : ${books}">
+                <div class="thumbnail" >
+                    <a href="BookInfo.html">
+                        <img style="width: 100%; height: 300px; display: block;" alt="100%x200" th:src="@{/images/bookSample.jpg}" >
+                    </a>
+                    <div class="caption center">
+                        <h3 th:text="${book.title}"></h3>
+
+                        <p><a class="btn btn-primary btn-block" role="button" href="bookDetails.html" th:href="@{/viewBooks/bookDetails(bookId=${book.title})}">Details</a></p>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+
+    </div>
+</div>
+ì
+</body>
+-->
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Login Page</title>
+    <link th:href="@{styles/style.css}" rel = "stylesheet"/>
+</head>
+<body>
+    <div id="main">
+        <h1 id="title">Mongolibrary</h1>
+<!--
+        <label>Username:<input id="username" type="text"></label>
+        <label>Password:<input id="password" type="password"></label>
+
+        <div>
+            <button>Login</button>
+            <a th:href="@{/signup}">Signup</a>
+        </div>
+-->
+        <form th:action="@{/login}" th:object="${loginForm}" method="post">
+            <p th:if="${credenzialiInvialide}" class="error"> Credenziali invalide </p>
+            <label for="username">Username: <input id="username" name="username" type="text" autofocus="autofocus"></label>
+            <label for="password">Password:<input id="password" name="password" type="password"></label>
+            <div id="radio-button-container">
+            <label for="admin-class"><input type="radio" name="user-class" id="admin-class" value="admin">Librarian</label>
+            <label for="customer-class"><input type="radio" name="user-class" id="customer-class" value="customer" checked="checked">User</label>
+            </div>
+            <br/>
+            <input type="submit" value="Login">
+        </form>
+
+        <p>Don't have an account yet? <a th:href="@{/signup}">Sign Up</a></p>
+    </div>
+</body>
+</html>
