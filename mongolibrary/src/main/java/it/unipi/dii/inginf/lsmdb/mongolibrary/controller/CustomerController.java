@@ -227,18 +227,23 @@ public class CustomerController {
         switch (numSuggestion){
             case 1:
                 model.addAttribute("results", customerManager.showBooksSuggestion(username));
+                model.addAttribute("type", "books");
                 break;
             case 2:
                 model.addAttribute("results", customerManager.showBooksSuggestionReading(username));
+                model.addAttribute("type", "books");
                 break;
             case 3:
                 model.addAttribute("results", customerManager.showBooksSuggestionTime(username, DateConverter.toLong(LocalDate.now().toString())));
+                model.addAttribute("type", "books");
                 break;
             case 4:
                 model.addAttribute("results", customerManager.showUsersSuggestionReading(username));
+                model.addAttribute("type", "users");
                 break;
             case 5:
                 model.addAttribute("results", customerManager.showUsersSuggestionTime(username, DateConverter.toLong(LocalDate.now().toString())));
+                model.addAttribute("type", "users");
                 break;
             default:
                 System.out.println("not a suggestion");
