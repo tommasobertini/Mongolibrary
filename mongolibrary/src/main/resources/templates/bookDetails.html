@@ -107,6 +107,8 @@
             <h1 th:text="${book.title}" >Title</h1>
             <h3 th:text="${book.authors}"></h3>
             <h4 th:text="${book.categories}"></h4>
+            <h4 th:text="${#numbers.formatDecimal(book.score,1,2,'POINT') }"></h4>
+
 
 
             <th:block th:each="i: ${#numbers.sequence(0, book.score - 1)}">

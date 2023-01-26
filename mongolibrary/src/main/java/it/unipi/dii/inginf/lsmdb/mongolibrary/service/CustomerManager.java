@@ -292,6 +292,12 @@ public class CustomerManager extends UserManager
         for (var user : records) {
             books.add(String.valueOf(user.get(0)));
         }
+
+        for (int i=0; i<books.size(); i++){
+            String x = books.get(i).replaceAll("\"", "");
+            books.set(i, x);
+        }
+
         return books;
     }
 
@@ -308,6 +314,12 @@ public class CustomerManager extends UserManager
         for (var user : records) {
             books.add(String.valueOf(user.get(0)));
         }
+
+        for (int i=0; i<books.size(); i++){
+            String x = books.get(i).replaceAll("\"", "");
+            books.set(i, x);
+        }
+
         return books;
     }
 
@@ -325,6 +337,12 @@ public class CustomerManager extends UserManager
         for (var user : records) {
             books.add(String.valueOf(user.get(0)));
         }
+
+        for (int i=0; i<books.size(); i++){
+            String x = books.get(i).replaceAll("\"", "");
+            books.set(i, x);
+        }
+
         return books;
     }
 
@@ -341,6 +359,12 @@ public class CustomerManager extends UserManager
         for (var user : records) {
             users.add(String.valueOf(user.get(0)));
         }
+
+        for (int i=0; i<users.size(); i++){
+            String x = users.get(i).replaceAll("\"", "");
+            users.set(i, x);
+        }
+
         return users;
     }
 
@@ -357,6 +381,11 @@ public class CustomerManager extends UserManager
         List<Record> records = neo4JConnectionManager.suggestUserByBooksRecent(username, time-2592000, time);
         for (var user : records) {
             users.add(String.valueOf(user.get(0)));
+        }
+
+        for (int i=0; i<users.size(); i++){
+            String x = users.get(i).replaceAll("\"", "");
+            users.set(i, x);
         }
         return users;
     }
@@ -376,6 +405,12 @@ public class CustomerManager extends UserManager
             System.out.println("DIOCANE " + user.get(0));
             users.add(String.valueOf(user.get(0)));
         }
+
+        for (int i=0; i<users.size(); i++){
+            String x = users.get(i).replaceAll("\"", "");
+            users.set(i, x);
+        }
+
         return users;
     }
 }

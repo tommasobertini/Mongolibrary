@@ -348,6 +348,11 @@ public class UserManager {
         for (var book: records) {
             books.add(String.valueOf(book.get(0)));
         }
+
+        for (int i=0; i<books.size(); i++){
+            String x = books.get(i).replaceAll("\"", "");
+            books.set(i, x);
+        }
         return books;
     }
 
@@ -363,6 +368,11 @@ public class UserManager {
         List<Record> records = neo4JConnectionManager.showBorrowingList(username);
         for (var book: records) {
             books.add(String.valueOf(book.get(0)));
+        }
+
+        for (int i=0; i<books.size(); i++){
+            String x = books.get(i).replaceAll("\"", "");
+            books.set(i, x);
         }
         return books;
     }
@@ -382,6 +392,12 @@ public class UserManager {
         for (var book: records) {
             books.add(String.valueOf(book.get(0)));
         }
+
+        for (int i=0; i<books.size(); i++){
+            String x = books.get(i).replaceAll("\"", "");
+            books.set(i, x);
+        }
+
         return books;
     }
 
@@ -397,6 +413,12 @@ public class UserManager {
         for (var book: records) {
             books.add(String.valueOf(book.get(0)));
         }
+
+        for (int i=0; i<books.size(); i++){
+            String x = books.get(i).replaceAll("\"", "");
+            books.set(i, x);
+        }
+
         return books;
     }
 
@@ -412,6 +434,12 @@ public class UserManager {
         for (var book: records) {
             books.add(String.valueOf(book.get(0)));
         }
+
+        for (int i=0; i<books.size(); i++){
+            String x = books.get(i).replaceAll("\"", "");
+            books.set(i, x);
+        }
+
         return books;
     }
 
@@ -428,292 +456,13 @@ public class UserManager {
         for (var book: records) {
             books.add(String.valueOf(book.get(0)));
         }
+
+        for (int i=0; i<books.size(); i++){
+            String x = books.get(i).replaceAll("\"", "");
+            books.set(i, x);
+        }
+
         return books;
     }
 }
 
-    /*
-    protected final MongoConnectionManager mongoConnectionManager;
-
-    public UserManager(){
-        mongoConnectionManager = MongoConnectionManager.getInstance();
-    }
-
-    /*----------------------------------------Control functions-------------------------------------------------------
-
-    public ArrayList<Document> getBorrowingListAsDocuments(String username)
-    {
-        return mongoConnectionManager.findDocumentByKeyValue("customers", "username", username).next()
-                .get("borrowingList", ArrayList.class);
-    }
-
-    public ArrayList<String> getReadingListTitles(String username)
-    {
-        return mongoConnectionManager.findDocumentByKeyValue("customers", "username", username).next()
-                .get("readingList", ArrayList.class);
-    }
-
-    public ArrayList<String> getBorrowingListTitles(String username)
-    {
-        ArrayList<String> bookTitles = new ArrayList<>();
-
-        for(Document book : getBorrowingListAsDocuments(username))
-            bookTitles.add(book.getString("booktitle"));
-
-        return bookTitles;
-    }
-
-    public ArrayList<BorrowingListBookMongo> getDetailedBorrowingList(String username)
-    {
-        ArrayList<BorrowingListBookMongo> borrowedBooks = new ArrayList<>();
-
-        for(Document borrowedSelected : getBorrowingListAsDocuments(username))
-            borrowedBooks.add(new BorrowingListBookMongo(borrowedSelected));
-
-        return borrowedBooks;
-    }
-
-    /*----------------------------------------Display functions-------------------------------------------------------
-    public ArrayList<CustomerMongo> displayUsersSorted(String key, Integer howManyDocuments, Integer order)
-    {
-        String collection = "customers";
-        ArrayList<CustomerMongo> customersFound = new ArrayList<>();
-
-        MongoCursor<Document> cursor = null;
-
-        if (howManyDocuments == -1){
-            // all users
-            cursor = mongoConnectionManager.retrieveDocumentsOrderedByOneKeyValue(collection, key, order)
-                    .iterator();
-        }else{
-            cursor = mongoConnectionManager.retrieveDocumentsOrderedByOneKeyValue(collection, key, order)
-                    .limit(howManyDocuments).iterator();
-        }
-
-
-        while(cursor.hasNext())
-            customersFound.add(new CustomerMongo(cursor.next()));
-
-        return customersFound;
-    }
-
-    public ArrayList<CustomerMongo> displayUsersBasedOnAParameter(String key, String value)
-    {
-        String collection = "customers";
-        ArrayList<CustomerMongo> customersFound = new ArrayList<>();
-
-        MongoCursor<Document> cursor = mongoConnectionManager.findDocumentByKeyValue(collection, key, value);
-
-        while(cursor.hasNext())
-            customersFound.add(new CustomerMongo(cursor.next()));
-
-        return customersFound;
-    }
-
-    public CustomerMongo displayUser(String username)
-    //We can display the user data
-    {
-        return new CustomerMongo(mongoConnectionManager.findDocumentByKeyValue("customers", "username", username).next());
-    }
-
-    public ArrayList<BookMongo> displayBooksList(ArrayList<String> list)
-    //We can display both reading list and borrowing list as normal books
-    {
-        ArrayList<BookMongo> books = new ArrayList<>();
-
-        for(String bookTitle : list){
-            books.add(new BookMongo(mongoConnectionManager.findDocumentByKeyValue("books", "Title", bookTitle).next()));
-        }
-
-        return books;
-    }
-
-    public ArrayList<BookMongo> displayBooksSorted(String key, Integer howManyDocuments, Integer order)
-    {
-        String collection = "books";
-        ArrayList<BookMongo> booksFound = new ArrayList<>();
-
-        MongoCursor<Document> cursor = null;
-
-        if(howManyDocuments == -1){
-            // all books
-             cursor = mongoConnectionManager.retrieveDocumentsOrderedByOneKeyValue(collection, key, order)
-                    .iterator();
-        }else{
-            // limit
-            cursor = mongoConnectionManager.retrieveDocumentsOrderedByOneKeyValue(collection, key, order)
-                    .limit(howManyDocuments).iterator();
-        }
-
-
-        while(cursor.hasNext())
-            booksFound.add(new BookMongo(cursor.next()));
-
-        return booksFound;
-    }
-
-    public ArrayList<BookMongo> displayBooksBasedOnAParameter(String key, String value)
-    {
-        String collection = "books";
-        ArrayList<BookMongo> booksFound = new ArrayList<>();
-
-        MongoCursor<Document> cursor = mongoConnectionManager.findDocumentByKeyValue(collection, key, value);
-
-        while(cursor.hasNext())
-            booksFound.add(new BookMongo(cursor.next()));
-
-        return booksFound;
-    }
-
-    public BookMongo displayBook(String book)
-    {
-        return new BookMongo(mongoConnectionManager.findDocumentByKeyValue("books", "Title", book).next());
-    }
-
-    public ArrayList<ReviewMongo> displayReviews(String book)
-    {
-        ArrayList<ReviewMongo> reviewsFound = new ArrayList<>();
-        MongoCursor<Document> associatedReviews = mongoConnectionManager.findDocumentByKeyValue("reviews", "bookTitle", book);
-
-        while(associatedReviews.hasNext())
-            reviewsFound.add(new ReviewMongo(associatedReviews.next()));
-
-        return reviewsFound;
-    }
-
-    /*----------------------------------------Add functions-----------------------------------------------------------
-
-    /*----------------------------------------Generic functions-------------------------------------------------------
-
-    public void calculateScore(String bookTitle)
-    {
-        ArrayList<ReviewMongo> reviewsFound = new ArrayList<>();
-        Double newRating = 0.0;
-
-        MongoCursor<Document> associatedReviews = mongoConnectionManager.findDocumentByKeyValue("reviews", "bookTitle", bookTitle);
-
-        while(associatedReviews.hasNext())
-            reviewsFound.add(new ReviewMongo(associatedReviews.next()));
-
-        if (reviewsFound.size() == 0)
-            return;
-
-        for(ReviewMongo reviews : reviewsFound)
-            newRating = newRating + reviews.getScore();
-
-        mongoConnectionManager.updateOneDocumentByKeyValue("books", "Title", bookTitle,"score", (newRating/reviewsFound.size())); //Recalculates the score
-    }
-
-    public Paged<BookMongo> getBookMongo(int pageNumber, int size)
-    {
-        List<BookMongo> books = displayBooksSorted("Title", -1, 1);
-
-        List<BookMongo> paged = books.stream()
-                                     .skip((pageNumber-1) * size)
-                                     .limit(size)
-                                     .collect(Collectors.toList());
-
-        int totalPages = (int) Math.ceil((double) books.size() / size);
-
-        System.out.println("book size: " + books.size());
-        System.out.println("size: " + size);
-        System.out.println("totalPages: " + totalPages);
-
-        return new Paged<>(new Page<>(paged, totalPages), Paging.of(totalPages, pageNumber, size));
-
-        //return new Paged<>();
-    }
-
-    public Paged<BookMongo> getReadingList(int pageNumber, int size, String username)
-    {
-        List<BookMongo> books = displayBooksList(getReadingListTitles(username));
-
-        List<BookMongo> paged = books.stream()
-                .skip((pageNumber-1) * size)
-                .limit(size)
-                .collect(Collectors.toList());
-
-        int totalPages = (int) Math.ceil((double) books.size() / size);
-
-        System.out.println("book size: " + books.size());
-        System.out.println("size: " + size);
-        System.out.println("totalPages: " + totalPages);
-
-        return new Paged<>(new Page<>(paged, totalPages), Paging.of(totalPages, pageNumber, size));
-
-    }
-
-    public Paged<BorrowingListBookMongo> getBorrowingList(int pageNumber, int size, String username)
-    {
-        List<BorrowingListBookMongo> books = getDetailedBorrowingList(username);
-
-        List<BorrowingListBookMongo> paged = books.stream()
-                .skip((pageNumber-1) * size)
-                .limit(size)
-                .collect(Collectors.toList());
-
-        int totalPages = (int) Math.ceil((double) books.size() / size);
-
-        System.out.println("book size: " + books.size());
-        System.out.println("size: " + size);
-        System.out.println("totalPages: " + totalPages);
-
-        return new Paged<>(new Page<>(paged, totalPages), Paging.of(totalPages, pageNumber, size));
-
-    }
-
-    public Paged<CustomerMongo> getUsers(int pageNumber, int size)
-    {
-        List<CustomerMongo> customers = displayUsersSorted("username", -1, 1);
-
-        List<CustomerMongo> paged = customers.stream()
-                .skip((pageNumber-1) * size)
-                .limit(size)
-                .collect(Collectors.toList());
-
-        int totalPages = (int) Math.ceil((double) customers.size() / size);
-
-        System.out.println("book size: " + customers.size());
-        System.out.println("size: " + size);
-        System.out.println("totalPages: " + totalPages);
-
-        return new Paged<>(new Page<>(paged, totalPages), Paging.of(totalPages, pageNumber, size));
-    }
-
-    public void create(){
-        //Creating a JSONObject object
-        JSONObject jsonObject = new JSONObject();
-
-        ArrayList<BookMongo> books = displayBooksSorted("Title", -1, 1);
-
-        for(int i = 0; i< books.size(); i++) {
-            jsonObject.put("_id", books.get(i));
-        }
-
-
-
-        StringBuilder sb = new StringBuilder();
-
-        for(Document x : mongoConnectionManager.printAllBooksWithId()){
-            sb.append("{ \"_id\": {\"$oid\": ");
-            sb.append("\"");
-            sb.append(x.getObjectId("_id"));
-            sb.append("\"");
-            sb.append("}, \"Title\": ");
-            sb.append("\"");
-            sb.append(x.getString("Title"));
-            sb.append("\" }, ");
-        }
-
-        try {
-            FileWriter file = new FileWriter("C:\\Users\\tommy\\Desktop\\output.json");
-            file.write(sb.toString());
-            file.close();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        System.out.println("JSON file created: "+jsonObject);
-    }
-
-    */
