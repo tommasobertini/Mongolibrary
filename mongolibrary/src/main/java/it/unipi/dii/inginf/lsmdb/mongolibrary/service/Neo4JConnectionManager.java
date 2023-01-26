@@ -287,11 +287,16 @@ public class Neo4JConnectionManager implements AutoCloseable{
      * @return
      */
     public List<org.neo4j.driver.Record> suggestUserByReadingList(String currentUser) {
+        System.out.println("DIO PUTTANA");
         try (Session session = driver.session()) {
             return session.executeRead(tx -> tx.run("USE mongolibrary " +
                             "MATCH (:User {name: $name})-[:WANTS_TO_READ]->(:Book)<-[:WANTS_TO_READ]-(v:User) " +
                             "RETURN v.name, COUNT(v.name) ORDER BY COUNT(v.name) DESC LIMIT 5",
                     parameters("name", currentUser)).list());
+        }
+        catch (Neo4jException e){
+            System.out.println(e);
+            return null;
         }
     }
 

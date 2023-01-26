@@ -222,7 +222,7 @@ public class CustomerController {
 
         String username = (String)customBean.getBean(Constants.SESSION_USERNAME);
         //Integer date = DateConverter.toLong(LocalDate.now().toString());
-        System.out.println();
+        System.out.println(numSuggestion);
 
         switch (numSuggestion){
             case 1:
