@@ -69,7 +69,7 @@
                         <td th:if="${customer.status == true}" th:text="Active">Status</td>
                         <td th:if="${customer.status == false}" th:text="Banned">Status</td>
                         <td>
-                            <form th:action="@{/changeStatus}" method="get">
+                            <form th:action="@{/changeStatus{username}(username = ${customer.username})}" method="get">
                                 <button class="btn btn-primary btn-sm" type="submit">Ban/Unban</button>
                             </form>
                         </td>

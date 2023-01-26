@@ -22,7 +22,7 @@
             <form  th:action="@{/searchBook}" method="get">
                 <button class="w-100 btn btn-lg btn-primary mb-4" type="submit">Search Books</button>
             </form>
-            <form th:action="@{/viewBooks}" method="get">
+            <form th:action="@{/viewBooks{sort}(sort = ${'Title'})}" method="get">
                 <button class="w-100 btn btn-lg btn-primary mb-4" type="submit">View Books</button>
             </form>
             <form th:action="@{/readingList{username}(username = ${sessionUsername})}" method="get">

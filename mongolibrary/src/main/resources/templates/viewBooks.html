@@ -36,16 +36,16 @@
       <nav aria-label="Page navigation" class="paging mb-3">
         <ul class="pagination">
           <li class="page-item" th:classappend="${pageNumber.intValue() <= 1 ? 'disabled' : ''}">
-            <a class="page-link" th:href="@{'/viewBooks?pageNumber=' + ${pageNumber - 1}}">Previous</a>
+            <a class="page-link" th:href="@{'/viewBooks{sort}?pageNumber=' + ${pageNumber - 1}(sort = ${sort})}">Previous</a>
           </li>
 
           <li class="page-item disabled">
-            <a class="page-link" th:href="@{'/viewBooks?pageNumber=' + ${pageNumber}}"
+            <a class="page-link" th:href="@{'/viewBooks{sort}?pageNumber=' + ${pageNumber}(sort = ${sort})}"
                th:text="${pageNumber}"></a>
           </li>
 
           <li class="page-item">
-            <a class="page-link" th:href="@{'/viewBooks?pageNumber=' + ${pageNumber + 1}}">Next</a>
+            <a class="page-link" th:href="@{'/viewBooks{sort}?pageNumber=' + ${pageNumber + 1}(sort = ${sort})}">Next</a>
           </li>
           <li>
             <form style="margin-left: 1em" th:action="@{/viewBooks}">
@@ -56,14 +56,9 @@
           </li>
         </ul>
 
-        <ul class="flex-row inline list-group-horizontal-md">
-          <li>
-            <a href="#">By Title</a>
-          </li>
-          <li>
-            <a href="#">By Score</a>
-          </li>
-        </ul>
+        <p><a th:href="@{/viewBooks{sort}(sort = ${'Title'})}" th:text="'By Title'"></a></p>
+        <p><a th:href="@{/viewBooks{sort}(sort = ${'score'})}" th:text="'By Score'"></a></p>
+
 
       </nav>
 
@@ -71,12 +66,13 @@
 
       <div class="col-sm-4 col-md-3"th:each="book : ${books}">
         <div class="thumbnail" >
-          <a  th:href="@{/bookDetails{title}(title = ${book.title})}">
+          <a  th:href="@{/bookDetails{title}/{page}(title = ${book.title}, page = 1)}">
             <img style="width: 60%; height: 60%; " class="mb-3" alt="100%x200%" th:src="@{/images/book-sample.png}" >
           </a>
           <div class="caption center">
             <h4 th:text="${book.title}"></h4>
-            <h6 th:text="${book.authors}"></h6>
+            <h5 th:text="${book.authors}"></h5>
+            <h6 th:text="${book.categories}"></h6>
 
             <div class="rate">
               <th:block th:each="i: ${#numbers.sequence(0, book.score - 1)}">

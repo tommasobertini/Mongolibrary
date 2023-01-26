@@ -387,6 +387,17 @@ public class UserManager {
     /*----------------------------------------Generic functions-------------------------------------------------------*/
 
     /**
+     * Changes the status of a specific book in the borrowing list of a user.
+     * @param username name of the user that borrowed the book
+     * @param bookTitle name of the book that has been borrowed
+     * @param newStatus either "RETURNED" or "OVERDUE"
+     */
+    public void modifyBorrowingListBookStatus(String username, String bookTitle, String newStatus) throws MongoException
+    {
+        mongoConnectionManager.atomicModifyBorrowingListBookStatus(username, bookTitle, newStatus);
+    }
+
+    /**
      * N4J
      * Function to return the most borrowed books of all time
      * @return List of String containing titles of the books

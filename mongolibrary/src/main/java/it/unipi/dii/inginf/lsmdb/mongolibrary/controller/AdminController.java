@@ -187,54 +187,18 @@ public class AdminController {
         return "analytics";
     }
 
-    /*
-    @RequestMapping(value = {"/mostBorrowed"}, method = RequestMethod.POST)
-    public String mostBorrowedBooks(@RequestParam(value = "start", required = false, defaultValue = "") String start,
-                                    @RequestParam(value = "end", required = false, defaultValue = "") String end,
-                                    @RequestParam(value = "pageNumber", required = false, defaultValue = "1") int pageNumber,
-                                    @RequestParam(value = "size", required = false, defaultValue = "20") int size,
-                                    //@PathVariable(value)
-                                    Model model){
+    @GetMapping("/changeStatus{username}")
+    public String changeStatus(@PathVariable(name = "username") String username,
+                               Model model){
 
-        //handler pagination
-        String s = (String)customBean.getBean(Constants.START_DATE);
-        String e = (String)customBean.getBean(Constants.END_DATE);
-        if (s==null && e==null){
-            customBean.putBean(Constants.START_DATE, start);
-            customBean.putBean(Constants.END_DATE, end);
-            System.out.println("parametri inseriti");
-        }
+        adminManager.modifyUserStatus(username);
 
-        if(start.equals("")){
-            start = (String) customBean.getBean(Constants.START_DATE);
-            end = (String) customBean.getBean(Constants.END_DATE);
-            System.out.println("update");
-        }else{
-            customBean.replaceBean(Constants.START_DATE, start);
-            customBean.replaceBean(Constants.END_DATE, end);
-        }
-
-        System.out.println("start: " + start);
-
-        Integer startYear = LocalDate.parse(start).getYear();
-        Integer startDate = (int) LocalDate.parse(start).toEpochSecond(LocalTime.NOON, ZoneOffset.UTC);
-        Integer endYear = LocalDate.parse(end).getYear();
-        Integer endDate = (int) LocalDate.parse(end).toEpochSecond(LocalTime.NOON, ZoneOffset.UTC);
-
-
-        model.addAttribute("results", adminManager.displayMostBorrowedBooksBasedOnTimeAndBirthYear(startYear, startDate, endYear, endDate, pageNumber, size));
-        System.out.println(start);
-        System.out.println(end);
         model.addAttribute("userClass", customBean.getBean(Constants.SESSION_USER_CLASS));
         model.addAttribute("sessionUsername", customBean.getBean(Constants.SESSION_USERNAME));
-        model.addAttribute("analytics", "ok");
-        model.addAttribute("pageNumber", pageNumber);
-        model.addAttribute("start", start);
-        model.addAttribute("end", end);
 
-        return "analytics";
+        return "redirect:/viewUsers";
     }
-     */
+
 
 
 

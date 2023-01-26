@@ -80,33 +80,16 @@ public class AdminManager extends UserManager
 
     /*----------------------------------------Generic functions-------------------------------------------------------*/
 
-    /**
-     * Changes the status of a specific book in the borrowing list of a user.
-     * @param username name of the user that borrowed the book
-     * @param bookTitle name of the book that has been borrowed
-     * @param newStatus either "RETURNED" or "OVERDUE"
-     */
-    public void modifyBorrowingListBookStatus(String username, String bookTitle, String newStatus) throws MongoException
-    {
-        mongoConnectionManager.atomicModifyBorrowingListBookStatus(username, bookTitle, newStatus);
-    }
 
     /**
      * Changes the status of a user from blocked to unblocked or viceversa.
      * @param username name of the user that we want to block or unblock
-     * @param currentStatus status of the user -> TRUE or FALSE
-     * @param newStatus new status -> TRUE or FALSE
      * @return if the operation is succesfull we return TRUE
      */
-    public boolean modifyUserStatus(String username, Boolean currentStatus, Boolean newStatus) throws MongoException
+    public void modifyUserStatus(String username) throws MongoException
     {
         Document user = mongoConnectionManager.findDocumentByKeyValue("customers", "username", username).next();
-        if(user.getBoolean("status") == currentStatus)
-        {
-            mongoConnectionManager.updateOneDocumentByKeyValue("customers", "username", username, "status", newStatus);
-            return true;
-        }
-        return false; //The user was already blocked/unblocked
+        mongoConnectionManager.updateOneDocumentByKeyValue("customers", "username", username, "status", !user.getBoolean("status"));
     }
 
     /**

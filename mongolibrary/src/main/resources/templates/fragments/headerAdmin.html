@@ -11,7 +11,7 @@
       <li><a th:href="@{/admin}" class="nav-link px-2 link-secondary fs-3">Home</a></li>
       <li><a th:href="@{/addBook}" class="nav-link px-2 link-secondary fs-3">Add</a></li>
       <li><a th:href="@{/searchBook}" class="nav-link px-2 link-secondary fs-3">Search</a></li>
-      <li><a th:href="@{/viewBooks}" class="nav-link px-2 link-secondary fs-3">Books</a></li>
+      <li><a th:href="@{/viewBooks{sort}(sort = ${'Title'})}" class="nav-link px-2 link-secondary fs-3">Books</a></li>
       <li><a th:href="@{/viewUsers}" class="nav-link px-2 link-secondary fs-3">Users</a></li>
       <li><a th:href="@{/analytics}" class="nav-link px-2 link-secondary fs-3">Analytics</a></li>
     </ul>

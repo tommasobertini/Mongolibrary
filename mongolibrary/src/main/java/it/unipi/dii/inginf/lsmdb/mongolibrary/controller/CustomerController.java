@@ -256,5 +256,21 @@ public class CustomerController {
         return "suggestions";
     }
 
+    @GetMapping("/returnBook{title}")
+    public String returnBook(@PathVariable(name = "title") String title,
+                             Model model){
+
+        try{
+            customerManager.modifyBorrowingListBookStatus(customerManager.getMyCustomerData().getUsername(), title, "RETURNED");
+        }catch (MongoException me){
+            System.out.println(me.getMessage());
+        }
+
+
+        model.addAttribute("userClass", customBean.getBean(Constants.SESSION_USER_CLASS));
+        model.addAttribute("sessionUsername", customBean.getBean(Constants.SESSION_USERNAME));
+
+        return "userHome";
+    }
 
 }

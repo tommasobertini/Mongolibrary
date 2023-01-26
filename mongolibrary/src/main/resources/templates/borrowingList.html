@@ -29,6 +29,7 @@
             <th>Borrow Date</th>
             <th>Return Date</th>
             <th>Status</th>
+            <th>Edit</th>
           </th:block>
 
 
@@ -42,6 +43,11 @@
             <td th:text="${book.borrowDate}">borrowdate</td>
             <td th:text="${book.returnDate}">returndate</td>
             <td th:text="${book.status}">status</td>
+            <td>
+              <form th:action="@{/returnBook{title}(title = ${book.bookTitle})}" method="get" th:unless="${book.status == 'RETURNED'}">
+                <button class="btn btn-primary btn-sm" type="submit">Return</button>
+              </form>
+            </td>
 
           </tr>
         </th:block>
