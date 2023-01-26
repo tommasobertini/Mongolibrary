@@ -2,11 +2,11 @@ package it.unipi.dii.inginf.lsmdb.mongolibrary.service;
 
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoException;
+import com.mongodb.ReadPreference;
+import com.mongodb.WriteConcern;
 import com.mongodb.client.*;
 import com.mongodb.client.model.*;
-import it.unipi.dii.inginf.lsmdb.mongolibrary.exceptions.LoginException;
 import it.unipi.dii.inginf.lsmdb.mongolibrary.repository.mongo.ReviewMongo;
-import it.unipi.dii.inginf.lsmdb.mongolibrary.util.Password;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bson.Document;
@@ -23,34 +23,57 @@ import static com.mongodb.client.model.Sorts.orderBy;
 public class MongoConnectionManager implements AutoCloseable{
     private static final Logger LOGGER = LogManager.getLogger(MongoConnectionManager.class);
     private static MongoConnectionManager instance = null;
+    private final ConnectionString uri;
     private final MongoClient client;
     private final MongoDatabase database;
-    private MongoCollection<Document> interestedCollection;
     private final Bson idFilter;
+
+    private static final DatabaseConfiguration databaseConfiguration = new DatabaseConfiguration();
+
+    private MongoCollection<Document> interestedCollection;
 
     private MongoConnectionManager()
     {
         //Create connections String to local instance
-        ConnectionString uri = new ConnectionString("mongodb://localhost:27017");
+        uri = new ConnectionString(databaseConfiguration.getMongoUri());
         //Create a new connection to mongodb client
         client = MongoClients.create(uri);
         //Connect to mongolibrary database -> Creates db only when we insert a collection, and we insert something in it
-        database = client.getDatabase("mongolibrary");
+        database = client.getDatabase(databaseConfiguration.getMongoDatabaseName());
         //Gets the specific document for the reportedReviews managed by the admins
-        idFilter = Filters.eq("_id", new ObjectId("63c98652d3cc6d14a4a3fdea"));
+        idFilter = Filters.eq("_id", new ObjectId(databaseConfiguration.getReportedReviewsId()));
     }
 
-    public static MongoConnectionManager getInstance()
+    public static MongoConnectionManager getInstance() throws MongoException
     //Singleton Pattern
     {
-        if(instance == null)
-        {
-            LOGGER.info("getInstance() | Creating a new MongoConnectionManager instance"); //LOG
-
-            instance = new MongoConnectionManager();
+        try {
+            if (instance == null) { instance = new MongoConnectionManager(); }
+        } catch (MongoException me) {
+            LOGGER.fatal("Failed to open a connection with MongoDB server " + databaseConfiguration.getMongoUri() + " on database " + databaseConfiguration.getMongoDatabaseName());
+            throw me;
         }
-        LOGGER.info("getInstance() | Returning the MongoConnectionManager instance"); //LOG
         return instance;
+    }
+
+    public MongoCollection<Document> getCollection(String collection) throws MongoException
+    {
+        //Creates empty MongoCollection
+        MongoCollection<Document> mongoCollection;
+
+        // Get access to a collection from the database
+        try {
+            mongoCollection = database.getCollection(collection)
+                    .withWriteConcern(WriteConcern.W1)
+                    .withReadPreference(ReadPreference.nearest());
+
+        } catch (MongoException me) {
+            LOGGER.fatal("Failed to find " + collection + " collection in database " + database.getName());
+            throw me;
+        }
+
+        //returns the collection of documents
+        return mongoCollection;
     }
 
     @Override
