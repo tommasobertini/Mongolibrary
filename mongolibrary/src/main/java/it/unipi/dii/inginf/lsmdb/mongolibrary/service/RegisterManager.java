@@ -49,6 +49,7 @@ public class RegisterManager {
         mongoConnectionManager.addElement("customers", user);
         var result = neo4JConnectionManager.register(user.getString("username"), user.getString("nationality"), user.getInteger("birthYear"));
         if (!result) {
+            System.out.println("DIOCANAGLIABESTIA");
             //TODO: MONGODB ROLLBACK
         }
     }

@@ -48,10 +48,10 @@ public class Neo4JConnectionManager implements AutoCloseable{
             throw new LoginException("USER NOT FOUND EXCEPTION");
         }
         try (Session session = driver.session()) {
-            var result = session.executeWrite(tx -> tx.run("USE mongolibrary " +
+            var result = session.executeRead(tx -> tx.run("USE mongolibrary " +
                             "MATCH (u:User {name: $username})" +
                             "RETURN u.name",
-                    parameters("name", currentUser)));
+                    parameters("username", currentUser)));
             return result.hasNext();
         } catch (Neo4jException e) {
             return false;
@@ -68,7 +68,7 @@ public class Neo4JConnectionManager implements AutoCloseable{
         try (Session session = driver.session()) {
             session.executeWrite(tx -> tx.run("USE mongolibrary " +
                             "MERGE (u:User {name: $username, nationality: $nationality, birthyear: $birthyear})",
-                    parameters("name", username, "nationality", nationality, "birthyear", birthyear)));
+                    parameters("username", username, "nationality", nationality, "birthyear", birthyear)));
             return true;
         } catch (Neo4jException e) {
             return false;
@@ -99,10 +99,9 @@ public class Neo4JConnectionManager implements AutoCloseable{
     public boolean addToFollowed(String currentUser, String username) {
         try (Session session = driver.session()) {
             session.executeWrite(tx -> tx.run("USE mongolibrary " +
-                            "MATCH (a:User),(b:User) " +
-                            "WHERE a.name = $currentUser AND b.name = $username " +
+                            "MATCH (a:User {name: $currentUser}),(b:User {name: $username}) " +
                             "MERGE (a)-[r:FOLLOWS]->(b)",
-                    parameters("currentUser",currentUser, "name", username)));
+                    parameters("currentUser",currentUser, "username", username)));
             return true;
         } catch (Neo4jException e) {
             return false;
@@ -212,31 +211,31 @@ public class Neo4JConnectionManager implements AutoCloseable{
      */
     public List<org.neo4j.driver.Record> suggestBookByFollows(String currentUser) {
         try (Session session = driver.session()) {
-            return session.executeRead(tx -> tx.run("USE mongolibrary" +
-                            "MATCH (n:User {name: $name})--(u:User)" +
-                            "MATCH (:User {name: u.name})-[:BORROWED]->(b:Book)" +
-                            "RETURN b.title ORDER BY COUNT(b.title) DESC LIMIT 5",
+            return session.executeRead(tx -> tx.run("USE mongolibrary " +
+                            "MATCH (n:User {name: $name})--(u:User) " +
+                            "MATCH (:User {name: u.name})-[:BORROWED]->(b:Book) " +
+                            "RETURN b.title, COUNT(b.title) ORDER BY COUNT(b.title) DESC LIMIT 5",
                     parameters("name",currentUser)).list());
         }
     }
 
     public List<org.neo4j.driver.Record> suggestBookByFollowRecent(String currentUser, int starttime, int endtime) {
         try (Session session = driver.session()) {
-            return session.executeRead(tx -> tx.run("USE mongolibrary" +
+            return session.executeRead(tx -> tx.run("USE mongolibrary " +
                             "MATCH (n:User {name: $name})--(u:User)" +
                             "MATCH (:User {name: u.name})-[r:BORROWED]->(b:Book)" +
                             "WHERE $starttime < r.borrowdate < $endtime" +
-                            "RETURN b.title ORDER BY COUNT(b.title) DESC LIMIT 5",
+                            "RETURN b.title, COUNT(b.title) ORDER BY COUNT(b.title) DESC LIMIT 5",
                     parameters("name",currentUser, "starttime", starttime, "endtime", endtime)).list());
         }
     }
 
     public List<org.neo4j.driver.Record> suggestBookByReadingList(String currentUser) {
         try (Session session = driver.session()) {
-            return session.executeRead(tx -> tx.run("USE mongolibrary" +
+            return session.executeRead(tx -> tx.run("USE mongolibrary " +
                             "MATCH (n:User {name: $name})--(u:User)" +
                             "MATCH (:User {name: u.name})-[:WANTS_TO_READ]->(b:Book)" +
-                            "RETURN b.title ORDER BY COUNT(b.title) DESC LIMIT 5",
+                            "RETURN b.title, COUNT(b.title) ORDER BY COUNT(b.title) DESC LIMIT 5",
                     parameters("name",currentUser)).list());
         }
     }
@@ -248,9 +247,9 @@ public class Neo4JConnectionManager implements AutoCloseable{
      */
     public List<org.neo4j.driver.Record> suggestUserByBooks(String currentUser) {
         try (Session session = driver.session()) {
-            return session.executeRead(tx -> tx.run("USE mongolibrary" +
+            return session.executeRead(tx -> tx.run("USE mongolibrary " +
                             "MATCH (:User {name: $name})-[:BORROWED]->(:Book)<-[:BORROWED]-(v:User)" +
-                            "RETURN v.name ORDER BY COUNT(v.name) DESC LIMIT 5",
+                            "RETURN v.name, COUNT(v.name) ORDER BY COUNT(v.name) DESC LIMIT 5",
                     parameters("name", currentUser)).list());
         }
     }
@@ -264,10 +263,10 @@ public class Neo4JConnectionManager implements AutoCloseable{
      */
     public List<org.neo4j.driver.Record> suggestUserByBooksRecent(String currentUser, int starttime, int endtime) {
         try (Session session = driver.session()) {
-            return session.executeRead(tx -> tx.run("USE mongolibrary" +
+            return session.executeRead(tx -> tx.run("USE mongolibrary " +
                             "MATCH (:User {name: $name})-[r:BORROWED]->(:Book)<-[:BORROWED]-(v:User)" +
                             "WHERE $starttime < r.borrowdate < $endtime" +
-                            "RETURN v.name ORDER BY COUNT(v.name) DESC LIMIT 5",
+                            "RETURN v.name, COUNT(v.name) ORDER BY COUNT(v.name) DESC LIMIT 5",
                     parameters("name", currentUser, "starttime", starttime, "endtime", endtime)).list());
         }
     }
@@ -279,9 +278,9 @@ public class Neo4JConnectionManager implements AutoCloseable{
      */
     public List<org.neo4j.driver.Record> suggestUserByReadingList(String currentUser) {
         try (Session session = driver.session()) {
-            return session.executeRead(tx -> tx.run("USE mongolibrary" +
-                            "MATCH (:User {name: $name})-[:WANTS_TO_READ]->(:Book)<-[:WANTS_TO_READ]-(v:User)" +
-                            "RETURN v.name ORDER BY COUNT(v.name) DESC LIMIT 5",
+            return session.executeRead(tx -> tx.run("USE mongolibrary " +
+                            "MATCH (:User {name: $name})-[:WANTS_TO_READ]->(:Book)<-[:WANTS_TO_READ]-(v:User) " +
+                            "RETURN v.name, COUNT(v.name) ORDER BY COUNT(v.name) DESC LIMIT 5",
                     parameters("name", currentUser)).list());
         }
     }
@@ -293,8 +292,9 @@ public class Neo4JConnectionManager implements AutoCloseable{
      */
     public List<org.neo4j.driver.Record> bestBooksByGenre(String genre) {
         try (Session session = driver.session()) {
-            return session.executeRead(tx -> tx.run("MATCH ()-[:BORROWED]->(b:Book {genre: $genre})" +
-                            "RETURN b.title ORDER BY COUNT(b.title) DESC LIMIT 10",
+            return session.executeRead(tx -> tx.run("USE mongolibrary " +
+                            "MATCH ()-[:BORROWED]->(b:Book {genre: $genre}) " +
+                            "RETURN b.title, COUNT(b.title) ORDER BY COUNT(b.title) DESC LIMIT 10",
                     parameters("genre", genre)).list());
         }
     }
@@ -308,9 +308,10 @@ public class Neo4JConnectionManager implements AutoCloseable{
      */
     public List<org.neo4j.driver.Record> bestBooksByGenreLastMonth(String genre, Integer starttime, Integer endtime) {
         try (Session session = driver.session()) {
-            return session.executeRead(tx -> tx.run("MATCH ()-[r:BORROWED]->(b:Book {genre: $genre})" +
+            return session.executeRead(tx -> tx.run("USE mongolibrary " +
+                            "MATCH ()-[r:BORROWED]->(b:Book {genre: $genre}) " +
                             "WHERE $start < r.borrowdate < $end" +
-                            "RETURN b.title ORDER BY COUNT(b.title) DESC LIMIT 10",
+                            "RETURN b.title, COUNT(b.title) ORDER BY COUNT(b.title) DESC LIMIT 10",
                     parameters("genre", genre, "start", starttime, "end", endtime)).list());
         }
     }
@@ -321,7 +322,8 @@ public class Neo4JConnectionManager implements AutoCloseable{
      */
     public List<org.neo4j.driver.Record> bestBooks() {
         try (Session session = driver.session()) {
-            return session.executeRead(tx -> tx.run("MATCH ()-[:BORROWED]->(b:Book)" +
+            return session.executeRead(tx -> tx.run("USE mongolibrary " +
+                    "MATCH ()-[:BORROWED]->(b:Book) " +
                     "RETURN b.title, COUNT(b.title) ORDER BY COUNT(b.title) DESC LIMIT 10").list());
         }
     }
@@ -334,8 +336,9 @@ public class Neo4JConnectionManager implements AutoCloseable{
      */
     public List<Record> bestBooksLastMonth(Integer starttime, Integer endtime) {
         try (Session session = driver.session()) {
-            return session.executeRead(tx -> tx.run("MATCH ()-[r:BORROWED]->(b:Book)" +
-                            "WHERE $month < r.borrowdate < $current" +
+            return session.executeRead(tx -> tx.run("USE mongolibrary " +
+                            "MATCH ()-[r:BORROWED]->(b:Book) " +
+                            "WHERE $month < r.borrowdate < $current " +
                             "RETURN b.title, COUNT(b.title) ORDER BY COUNT(b.title) DESC LIMIT 10",
                     parameters("current", endtime, "month", starttime)).list());
         }
