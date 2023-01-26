@@ -154,11 +154,7 @@ public class AdminManager extends UserManager
 
         //Conversion to generic analytic object
         for(Document analyticObject : mongoConnectionManager.mostBorrowedBooksBasedOnTimeAndBirthYear(startYear, finalYear, startDate, endDate, pageNumber, pageLength))
-            convertedAnalytics.add(new AnalyticObjectMongo(
-                            new Document().append("key", analyticObject.getString("_id"))
-                                    .append("value", Integer.toString(analyticObject.getInteger("timesBorrowed")))
-                    )
-            );
+            convertedAnalytics.add(new AnalyticObjectMongo(analyticObject, "timesBorrowed"));
 
         //It will never be null
         return convertedAnalytics;
@@ -179,11 +175,7 @@ public class AdminManager extends UserManager
 
         //Conversion to generic analytic object
         for(Document analyticObject : mongoConnectionManager.averageNumberOfBorrowedBooksPerUserNationalityInAPeriod(startDate, endDate,pageNumber, pageLength))
-            convertedAnalytics.add(new AnalyticObjectMongo(
-                            new Document().append("key", analyticObject.getString("_id"))
-                                    .append("value", Double.toString(analyticObject.getDouble("averageNumberOfBooksTaken")))
-                    )
-            );
+            convertedAnalytics.add(new AnalyticObjectMongo(analyticObject, "averageNumberOfBooksTaken"));
 
         //It will never be null
         return convertedAnalytics;
@@ -204,11 +196,7 @@ public class AdminManager extends UserManager
 
         //Conversion to generic analytic object
         for(Document analyticObject : mongoConnectionManager.usersThatWroteTheMostLikedReviewsInATimePeriodWithAScore(startDate, endDate, score, pageNumber, pageLength))
-            convertedAnalytics.add(new AnalyticObjectMongo(
-                            new Document().append("key", analyticObject.getString("_id"))
-                                    .append("value", Integer.toString(analyticObject.getInteger("numberOfLikesReceived")))
-                    )
-            );
+            convertedAnalytics.add(new AnalyticObjectMongo(analyticObject, "numberOfLikesReceived"));
 
         //It will never be null
         return convertedAnalytics;
@@ -229,11 +217,7 @@ public class AdminManager extends UserManager
 
         //Conversion to generic analytic object
         for(Document analyticObject : mongoConnectionManager.averageNumberOfLikesPerReviewOfBooksInAPeriod(startDate, endDate, pageNumber, pageLength))
-            convertedAnalytics.add(new AnalyticObjectMongo(
-                            new Document().append("key", analyticObject.getString("_id"))
-                                    .append("value", Double.toString(analyticObject.getDouble("averageNumberOfLikes")))
-                    )
-            );
+            convertedAnalytics.add(new AnalyticObjectMongo(analyticObject, "averageNumberOfLikes"));
 
         //It will never be null
         return convertedAnalytics;

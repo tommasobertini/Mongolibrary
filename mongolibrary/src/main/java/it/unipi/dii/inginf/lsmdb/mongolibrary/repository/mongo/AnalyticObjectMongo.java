@@ -7,15 +7,15 @@ public class AnalyticObjectMongo {
     private String key;
     private String value;
 
-    public AnalyticObjectMongo(String key, String value)
+    public AnalyticObjectMongo(Object key, Object value)
     {
-        this.key = key;
-        this.value = value;
+        this.key = key.toString();
+        this.value = value.toString();
     }
 
-    public AnalyticObjectMongo(Document analyticsDocument)
+    public AnalyticObjectMongo(Document analyticsDocument, String value)
     {
-        this(analyticsDocument.getString("key"), analyticsDocument.getString("value"));
+        this(analyticsDocument.get("_id"), analyticsDocument.get(value));
     }
 
     public String getKey() {

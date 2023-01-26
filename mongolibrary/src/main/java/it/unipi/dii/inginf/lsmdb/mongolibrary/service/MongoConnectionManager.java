@@ -717,18 +717,18 @@ public class MongoConnectionManager implements AutoCloseable{
         //Conversion in list of Documents
         return interestedCollection.aggregate(
                 Arrays.asList(
+                        Aggregates.unwind("$borrowingList"),
                         Aggregates.match(and(startTime, endTime)),
-                        Aggregates.project(
+                        Aggregates.group(
                                 Projections.fields(
-                                        Projections.excludeId(),
-                                        Projections.include("username", "nationality"),
-                                        Projections.computed("numberOfBooks", new Document("$size", "$borrowingList"))
+                                        eq("username", "$username"), eq("nationality", "$nationality")
                                 )
+                                , Accumulators.sum("numbersOfBookTaken", 1)
                         ),
-                        Aggregates.group("$nationality", Accumulators.avg("averageNumberOfBooksTaken", "$numberOfBooks")),
+                        Aggregates.group("$_id.nationality", Accumulators.avg("averageNumberOfBooksTaken", "$numbersOfBookTaken")),
                         Aggregates.sort(sortStage),
                         Aggregates.skip(pageLength * (pageNumber - 1)),
-                        Aggregates.limit(pageLength)
+                        Aggregates.limit(pageLength * pageNumber)
                 )
         ).into(new ArrayList<>());
     }
