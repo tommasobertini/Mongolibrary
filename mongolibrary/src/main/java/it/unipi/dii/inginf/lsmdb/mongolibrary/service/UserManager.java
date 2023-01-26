@@ -314,6 +314,22 @@ public class UserManager {
     }
 
     /**
+     * Function to convert every List of Records in a List of String
+     * @param follows
+     * @param records
+     * @return
+     */
+    static List<String> getStrings(List<String> follows, List<Record> records) {
+        for (var user : records) {
+            follows.add(String.valueOf(user.get(0)));
+        }
+
+        follows.replaceAll(s -> s.replaceAll("\"", ""));
+
+        return follows;
+    }
+
+    /**
      * N4J
      * Return a list of all the followed users
      * @param username username of the currently logged user
@@ -323,16 +339,21 @@ public class UserManager {
     {
         List<String> follows = new ArrayList<>();
         List<Record> records = neo4JConnectionManager.showFollowed(username);
-        for (var user : records) {
-            follows.add(String.valueOf(user.get(0)));
-        }
+        return getStrings(follows, records);
+    }
 
-        for (int i=0; i<follows.size(); i++){
-            String x = follows.get(i).replaceAll("\"", "");
-            follows.set(i, x);
-        }
-
-        return follows;
+    /**
+     * N4J
+     * Return a list of all the users following the username user
+     * @param username username of user interested in the query
+     * @return List of String
+     */
+    public List<String> displayFollowers(String username)
+    {
+        List<String> follows = new ArrayList<>();
+        List<Record> records = neo4JConnectionManager.showFollowers(username);
+        return getStrings(follows, records);
+        // TODO: TOMMI BISOGNA INSERIRLA IN OGNI PAGINA USER
     }
 
     /**
@@ -345,15 +366,7 @@ public class UserManager {
     {
         List<String> books = new ArrayList<>();
         List<Record> records = neo4JConnectionManager.showReadingList(username);
-        for (var book: records) {
-            books.add(String.valueOf(book.get(0)));
-        }
-
-        for (int i=0; i<books.size(); i++){
-            String x = books.get(i).replaceAll("\"", "");
-            books.set(i, x);
-        }
-        return books;
+        return getStrings(books, records);
     }
 
     /**
@@ -366,15 +379,7 @@ public class UserManager {
     {
         List<String> books = new ArrayList<>();
         List<Record> records = neo4JConnectionManager.showBorrowingList(username);
-        for (var book: records) {
-            books.add(String.valueOf(book.get(0)));
-        }
-
-        for (int i=0; i<books.size(); i++){
-            String x = books.get(i).replaceAll("\"", "");
-            books.set(i, x);
-        }
-        return books;
+        return getStrings(books, records);
     }
 
     /*----------------------------------------Add functions-----------------------------------------------------------*/
@@ -389,16 +394,7 @@ public class UserManager {
     public List<String> displayBestBook() {
         List<String> books = new ArrayList<>();
         List<Record> records = neo4JConnectionManager.bestBooks();
-        for (var book: records) {
-            books.add(String.valueOf(book.get(0)));
-        }
-
-        for (int i=0; i<books.size(); i++){
-            String x = books.get(i).replaceAll("\"", "");
-            books.set(i, x);
-        }
-
-        return books;
+        return getStrings(books, records);
     }
 
     /**
@@ -410,16 +406,7 @@ public class UserManager {
     public List<String> displayBestBookByGenre(String genre) {
         List<String> books = new ArrayList<>();
         List<Record> records = neo4JConnectionManager.bestBooksByGenre(genre);
-        for (var book: records) {
-            books.add(String.valueOf(book.get(0)));
-        }
-
-        for (int i=0; i<books.size(); i++){
-            String x = books.get(i).replaceAll("\"", "");
-            books.set(i, x);
-        }
-
-        return books;
+        return getStrings(books, records);
     }
 
     /**
@@ -431,16 +418,7 @@ public class UserManager {
     public List<String> displayBestBookRecent(Integer time) {
         List<String> books = new ArrayList<>();
         List<Record> records = neo4JConnectionManager.bestBooksLastMonth(time-2592000, time);
-        for (var book: records) {
-            books.add(String.valueOf(book.get(0)));
-        }
-
-        for (int i=0; i<books.size(); i++){
-            String x = books.get(i).replaceAll("\"", "");
-            books.set(i, x);
-        }
-
-        return books;
+        return getStrings(books, records);
     }
 
     /**
@@ -453,16 +431,7 @@ public class UserManager {
     public List<String> displayBestBookByGenreRecent(String genre, Integer time) {
         List<String> books = new ArrayList<>();
         List<Record> records = neo4JConnectionManager.bestBooksByGenreLastMonth(genre, time-2592000, time);
-        for (var book: records) {
-            books.add(String.valueOf(book.get(0)));
-        }
-
-        for (int i=0; i<books.size(); i++){
-            String x = books.get(i).replaceAll("\"", "");
-            books.set(i, x);
-        }
-
-        return books;
+        return getStrings(books, records);
     }
 }
 
