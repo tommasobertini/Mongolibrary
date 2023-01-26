@@ -71,7 +71,7 @@
 
       <div class="col-sm-4 col-md-3"th:each="book : ${books}">
         <div class="thumbnail" >
-          <a  th:href="@{'/bookDetails?title=' + ${book.title}}">
+          <a  th:href="@{/bookDetails{title}(title = ${book.title})}">
             <img style="width: 60%; height: 60%; " class="mb-3" alt="100%x200%" th:src="@{/images/book-sample.png}" >
           </a>
           <div class="caption center">
@@ -118,93 +118,7 @@
     </div>
   </div>
 
-    <!--
 
-    <div class="row">
-
-      <nav aria-label="Page navigation" class="paging">
-        <ul class="pagination" th:if="${books.page.totalPages > 1}">
-          <li class="page-item" th:classappend="${!books.paging.isPrevEnabled()? 'disabled' : ''}">
-            <a class="page-link" th:href="@{'/viewBooks?pageNumber=' + ${books.paging.pageNumber - 1}}"
-               tabindex="-1">Previous</a>
-          </li>
-          <th:block th:each="item : ${books.paging.getItems()}">
-            <li class="page-item" th:classappend="${item.index == books.paging.pageNumber? 'active' : ''}"
-                th:if="${item.pageItemType.name() == 'PAGE'}">
-              <a class="page-link" th:href="@{'/viewBooks?pageNumber=' + ${item.index}}"
-                 th:text="${item.index}"></a>
-            </li>
-            <li class="page-item disabled" th:if="${item.pageItemType.name() == 'DOTS'}">
-              <a class="page-link" href="#">...</a>
-            </li>
-          </th:block>
-          <li class="page-item" th:classappend="${!books.paging.isNextEnabled()? 'disabled' : ''}">
-            <a class="page-link" th:href="@{'/viewBooks?pageNumber=' + ${books.paging.pageNumber + 1}}">Next</a>
-          </li>
-          <li>
-            <form style="margin-left: 1em" th:action="@{/viewBooks}">
-              <label for="pageNumber">Go to page</label>
-              <input class="input-group-sm" type="number" name="pageNumber" id="pageNumber" th:max="${books.page.totalPages}"/>
-              <button type="submit" class="btn btn-sm btn-primary">Go</button>
-            </form>
-          </li>
-        </ul>
-
-      </nav>
-
-      <div class="col-sm-4 col-md-3"th:each="book : ${books.page.content}">
-        <div class="thumbnail" >
-          <a  th:href="@{'/bookDetails?title=' + ${book.title}}">
-            <img style="width: 60%; height: 60%; " class="mb-3" alt="100%x200%" th:src="@{/images/book-sample.png}" >
-          </a>
-          <div class="caption center">
-            <h4 th:text="${book.title}"></h4>
-            <h6 th:text="${book.authors}"></h6>
-
-            <div class="rate">
-              <th:block th:each="i: ${#numbers.sequence(0, book.score - 1)}">
-                <span class="rating">★</span>
-              </th:block>
-            </div>
-
-          </div>
-        </div>
-      </div>
-
-      <nav aria-label="Page navigation" class="paging">
-        <ul class="pagination" th:if="${books.page.totalPages > 1}">
-          <li class="page-item" th:classappend="${!books.paging.isPrevEnabled()? 'disabled' : ''}">
-            <a class="page-link" th:href="@{'/viewBooks?pageNumber=' + ${books.paging.pageNumber - 1}}"
-               tabindex="-1">Previous</a>
-          </li>
-          <th:block th:each="item : ${books.paging.getItems()}">
-            <li class="page-item" th:classappend="${item.index == books.paging.pageNumber? 'active' : ''}"
-                th:if="${item.pageItemType.name() == 'PAGE'}">
-              <a class="page-link" th:href="@{'/viewBooks?pageNumber=' + ${item.index}}"
-                 th:text="${item.index}"></a>
-            </li>
-            <li class="page-item disabled" th:if="${item.pageItemType.name() == 'DOTS'}">
-              <a class="page-link" href="#">...</a>
-            </li>
-          </th:block>
-          <li class="page-item" th:classappend="${!books.paging.isNextEnabled()? 'disabled' : ''}">
-            <a class="page-link" th:href="@{'/viewBooks?pageNumber=' + ${books.paging.pageNumber + 1}}">Next</a>
-          </li>
-          <li>
-            <form style="margin-left: 1em" th:action="@{/viewBooks}">
-              <label for="pageNumber2">Go to page</label>
-              <input class="input-group-sm" type="number" name="pageNumber" id="pageNumber2" th:max="${books.page.totalPages}"/>
-              <button type="submit" class="btn btn-sm btn-primary">Go</button>
-            </form>
-          </li>
-        </ul>
-
-      </nav>
-
-    </div>
-  </div>
-
-  -->
 
 </body>
 </html>

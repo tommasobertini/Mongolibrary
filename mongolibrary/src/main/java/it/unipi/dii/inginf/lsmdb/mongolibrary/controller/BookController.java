@@ -103,8 +103,8 @@ public class BookController {
     }
 
 
-    @GetMapping(value = "/bookDetails")
-    public String bookDetails(@RequestParam(value = "title", required = false, defaultValue = "") String title,
+    @GetMapping(value = "/bookDetails{title}")
+    public String bookDetails(@PathVariable(name = "title") String title,
                               @RequestParam(value = "info", required = false, defaultValue = "") String info,
                               @RequestParam(value = "infoMessage", required = false, defaultValue = "") String infoMessage,
                               Model model){

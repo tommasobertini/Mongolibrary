@@ -53,7 +53,7 @@
                 <tbody>
                 <tr th:each="result : ${results}">
 
-                    <td th:if="${type == 'books'}"><a th:href="@{'/bookDetails?title=' + ${result}}" th:text="${result}" style="color: black"></a></td>
+                    <td th:if="${type == 'books'}"><a th:href="@{/bookDetails{title}(title = ${book.title})}" th:text="${result}" style="color: black"></a></td>
                     <td th:if="${type == 'users'}"><a th:href="@{/profile{username}(username=${result})}" th:text="${result}" style="color: black"></a></td>
 
                 </tr>
