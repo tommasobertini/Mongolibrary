@@ -216,12 +216,13 @@ public class CustomerController {
         return "suggestions";
     }
 
-    @GetMapping("/show")
-    public String showUsers1(@RequestParam(value = "number", required = false, defaultValue = "1") int numSuggestion,
+    @GetMapping("/show{num}")
+    public String showUsers1(@PathVariable(name = "num") int numSuggestion,
                             Model model){
 
         String username = (String)customBean.getBean(Constants.SESSION_USERNAME);
         //Integer date = DateConverter.toLong(LocalDate.now().toString());
+        System.out.println();
 
         switch (numSuggestion){
             case 1:

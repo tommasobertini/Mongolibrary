@@ -117,6 +117,8 @@ public class AdminController {
     @RequestMapping(value = {"/viewAnalytic"}, method = RequestMethod.POST)
     public String mostBorrowedBooks(@RequestParam(value = "start", required = false, defaultValue = "") String start,
                                     @RequestParam(value = "end", required = false, defaultValue = "") String end,
+                                    @RequestParam(value = "startYear", required = false, defaultValue = "") String startTime,
+                                    @RequestParam(value = "endYear", required = false, defaultValue = "") String endTime,
                                     @RequestParam(value = "pageNumber", required = false, defaultValue = "1") int pageNumber,
                                     @RequestParam(value = "size", required = false, defaultValue = "20") int size,
                                     @RequestParam(value = "score", required = false, defaultValue = "5") int score,
@@ -146,9 +148,9 @@ public class AdminController {
 
         System.out.println("start: " + start);
 
-        Integer startYear = LocalDate.parse(start).getYear();
+        Integer startYear = Integer.parseInt(startTime);
         Integer startDate = (int) LocalDate.parse(start).toEpochSecond(LocalTime.NOON, ZoneOffset.UTC);
-        Integer endYear = LocalDate.parse(end).getYear();
+        Integer endYear = Integer.parseInt(endTime);
         Integer endDate = (int) LocalDate.parse(end).toEpochSecond(LocalTime.NOON, ZoneOffset.UTC);
 
         switch (numAnalytic){

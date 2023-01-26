@@ -22,19 +22,19 @@
 
     <div id="buttons">
 
-        <form  th:action="@{'/show?number=1'}" method="get">
+        <form  th:action="@{/show{num}(num=1)}" method="get">
             <button class=" btn btn-lg btn-primary mb-4 w-auto" type="submit">Show Books 1</button>
         </form>
-        <form th:action="@{'/show?number=2'}" method="get">
+        <form th:action="@{/show{num}(num=2)}" method="get">
             <button class=" btn btn-lg btn-primary mb-4 w-auto" type="submit">Show Books 2</button>
         </form>
-        <form th:action="@{'/show?number=3'}" method="get">
+        <form th:action="@{/show{num}(num=3)}" method="get">
             <button class=" btn btn-lg btn-primary mb-4 w-auto" type="submit">Show Books 3</button>
         </form>
-        <form th:action="@{'/show?number=4'}" method="get">
+        <form th:action="@{/show{num}(num=3)}" method="get">
             <button class=" btn btn-lg btn-primary mb-4 w-auto" type="submit">Show Users 1</button>
         </form>
-        <form th:action="@{'/show?number=5'}" method="get">
+        <form th:action="@{/show{num}(num=5)}" method="get">
             <button class=" btn btn-lg btn-primary mb-4 w-auto" type="submit">Show Users 2</button>
         </form>
 
@@ -52,7 +52,7 @@
                 </thead>
                 <tbody>
                 <tr th:each="result : ${results}">
-                    <td><a th:href="@{/profile{username}(username=${result})}" th:text="${result}" style="color: black"></a></td>
+                    <td><a th:href="@{'/bookDetails?title=' + ${result}}" th:text="${result}" style="color: black"></a></td>
                 </tr>
                 </tbody>
             </table>

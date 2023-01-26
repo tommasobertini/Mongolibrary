@@ -22,6 +22,10 @@
       <input type="date"  name="start" />
         <label class="m-2">to</label>
       <input type="date"  name="end" />
+        <label class="m-2">by people born from</label>
+        <input type="number"  name="startYear" />
+        <label class="m-2">to</label>
+        <input type="number"  name="endYear" />
       <button class=" btn btn-sm btn-primary mb-4" type="submit">Go</button>
     </form>
     <form th:action="@{'/viewAnalytic?numberAnalytic=2'}" method="post">
