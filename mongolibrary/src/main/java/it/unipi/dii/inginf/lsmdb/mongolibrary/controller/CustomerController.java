@@ -195,8 +195,10 @@ public class CustomerController {
 
         //model.addAttribute("infoUser", customerManager.displayUser(username));
         String myUsername = (String) customBean.getBean(Constants.SESSION_USERNAME);
-        customerManager.addToFollowed(myUsername, username);
-        System.out.println("followed");
+        if(customerManager.addToFollowed(myUsername, username))
+                System.out.println("followed");
+        else
+            System.out.println("error follow");
 
         model.addAttribute("userClass", customBean.getBean(Constants.SESSION_USER_CLASS));
         model.addAttribute("sessionUsername", customBean.getBean(Constants.SESSION_USERNAME));

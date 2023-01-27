@@ -226,9 +226,9 @@ public class CustomerManager extends UserManager
      * @param userTarget
      */
 
-    public void addToFollowed(String currentUser, String userTarget)
+    public boolean addToFollowed(String currentUser, String userTarget)
     {
-        neo4JConnectionManager.addToFollowed(currentUser, userTarget);
+        return neo4JConnectionManager.addToFollowed(currentUser, userTarget);
     }
 
     /*----------------------------------------Generic functions-------------------------------------------------------*/
