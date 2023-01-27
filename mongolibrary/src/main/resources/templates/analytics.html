@@ -19,9 +19,9 @@
 
     <form th:action="@{'/viewAnalytic?numberAnalytic=1'}" method="post">
       <label> Most borrowed books from</label>
-      <input type="date"  name="start" />
+      <input type="date"  name="startDate" />
         <label class="m-2">to</label>
-      <input type="date"  name="end" />
+      <input type="date"  name="endDate" />
         <label class="m-2">by people born from</label>
         <input type="number"  name="startYear" />
         <label class="m-2">to</label>
@@ -30,25 +30,25 @@
     </form>
     <form th:action="@{'/viewAnalytic?numberAnalytic=2'}" method="post">
       <label>Average number of borrowed books by nationality from</label>
-        <input type="date"  name="start" />
+        <input type="date"  name="startDate" />
         <label class="m-2">to</label>
-        <input type="date"  name="end" />
+        <input type="date"  name="endDate" />
       <button class=" btn btn-sm btn-primary mb-4" type="submit">Go</button>
     </form>
     <form th:action="@{'/viewAnalytic?numberAnalytic=3'}" method="post">
       <label>Users that wrote the most liked reviews from</label>
-        <input type="date"  name="start" />
+        <input type="date"  name="startDate" />
         <label class="m-2">to</label>
-        <input type="date"  name="end" />
+        <input type="date"  name="endDate" />
         <label class="m-2">with score</label>
         <input type="number" th:default="5.0" name="score" placeholder="5.0">
       <button class=" btn btn-sm btn-primary mb-4" type="submit">Go</button>
     </form>
     <form th:action="@{'/viewAnalytic?numberAnalytic=4'}" method="post">
       <label>Average number of likes by review from</label>
-        <input type="date"  name="start" />
+        <input type="date"  name="startDate" />
         <label class="m-2">to</label>
-        <input type="date"  name="end" />
+        <input type="date"  name="endDate" />
       <button class=" btn btn-sm btn-primary mb-4" type="submit">Go</button>
     </form>
 
@@ -75,23 +75,23 @@
             <nav aria-label="Page navigation" class="paging mb-3">
                 <ul class="pagination">
                     <li class="page-item" th:unless="${pageNumber.intValue() <= 1}">
-                        <form th:action="@{'/viewAnalytic?pageNumber=' + ${pageNumber - 1}}" method="post">
+                        <form th:action="@{'/viewAnalytic?startDate=' + ${startDate} + '&endDate=' + ${endDate} + '&startYear=' + ${startYear} + '&endYear=' + ${endYear} + '&pageNumber=' + ${pageNumber - 1} + '&score=' + ${score} + '&numberAnalytic=' + ${numAnalytic}}" method="post">
                             <button type="submit" class="btn btn-sm btn-outline-primary">Previous</button>
                         </form>
                     </li>
 
                     <li class="page-item disabled">
-                        <a class="page-link" th:href="@{'/viewAnalytic?pageNumber=' + ${pageNumber}}"
+                        <a class="page-link" th:href="@{'/viewAnalytic?startDate=' + ${startDate} + '&endDate=' + ${endDate} + '&startYear=' + ${startYear} + '&endYear=' + ${endYear} + '&pageNumber=' + ${pageNumber} + '&score=' + ${score} + '&numberAnalytic=' + ${numAnalytic}}"
                            th:text="${pageNumber}"></a>
                     </li>
 
                     <li class="page-item">
-                        <form th:action="@{'/viewAnalytic?pageNumber=' + ${pageNumber + 1}}" method="post">
+                        <form th:action="@{'/viewAnalytic?startDate=' + ${startDate} + '&endDate=' + ${endDate} + '&startYear=' + ${startYear} + '&endYear=' + ${endYear} + '&pageNumber=' + ${pageNumber + 1} + '&score=' + ${score} + '&numberAnalytic=' + ${numAnalytic}}" method="post">
                             <button type="submit" class="btn btn-sm btn-outline-primary">Next</button>
                         </form>
                     </li>
                     <li>
-                        <form style="margin-left: 1em" th:action="@{/viewAnalytic}" method="post">
+                        <form style="margin-left: 1em" th:action="@{'/viewAnalytic?startDate=' + ${startDate} + '&endDate=' + ${endDate} + '&startYear=' + ${startYear} + '&endYear=' + ${endYear} + '&score=' + ${score} + '&numberAnalytic=' + ${numAnalytic}}" method="post">
                             <label for="page">Go to page</label>
                             <input class="input-group-sm" type="number" name="pageNumber" id="page"/>
                             <button type="submit" class="btn btn-sm btn-primary">Go</button>
