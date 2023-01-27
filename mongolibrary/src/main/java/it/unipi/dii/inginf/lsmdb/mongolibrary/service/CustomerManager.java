@@ -221,14 +221,25 @@ public class CustomerManager extends UserManager
     }
 
     /**
-     *
-     * @param currentUser
-     * @param userTarget
+     * Calls the addToFollowed method from Neo4JConnectionManager
+     * @param currentUser User currently logged
+     * @param userTarget User to be followed
+     * @return True or false based on the result of the query
      */
-
     public boolean addToFollowed(String currentUser, String userTarget)
     {
         return neo4JConnectionManager.addToFollowed(currentUser, userTarget);
+    }
+
+    /**
+     * Calls the removeFromFollowed method from Neo4JConnectionManager
+     * @param currentUser User currently logged
+     * @param userTarget User to remove from followed
+     * @return True or false based on the result of the query
+     */
+    public boolean removeFromFollowed(String currentUser, String userTarget)
+    {
+        return neo4JConnectionManager.removeFromFollowed(currentUser, userTarget);
     }
 
     /*----------------------------------------Generic functions-------------------------------------------------------*/
