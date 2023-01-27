@@ -711,8 +711,8 @@ public class MongoConnectionManager implements AutoCloseable{
         return interestedCollection.aggregate(
                 Arrays.asList(
                         Aggregates.match(and(start, end)),
-                        Aggregates.match(and(startTime, endTime)),
                         Aggregates.unwind("$borrowingList"),
+                        Aggregates.match(and(startTime, endTime)),
                         Aggregates.group("$borrowingList.booktitle", Accumulators.sum("timesBorrowed", 1)),
                         Aggregates.sort(sortStage),
                         Aggregates.skip(pageLength * (pageNumber - 1)),
