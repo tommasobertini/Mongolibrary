@@ -2,25 +2,19 @@ package it.unipi.dii.inginf.lsmdb.mongolibrary.service;
 
 import com.mongodb.MongoException;
 import com.mongodb.client.MongoCursor;
-import it.unipi.dii.inginf.lsmdb.mongolibrary.model.Customer;
 import it.unipi.dii.inginf.lsmdb.mongolibrary.repository.mongo.BookMongo;
 import it.unipi.dii.inginf.lsmdb.mongolibrary.repository.mongo.BorrowingListBookMongo;
 import it.unipi.dii.inginf.lsmdb.mongolibrary.repository.mongo.CustomerMongo;
 import it.unipi.dii.inginf.lsmdb.mongolibrary.repository.mongo.ReviewMongo;
-import it.unipi.dii.inginf.lsmdb.mongolibrary.util.CustomBean;
-import it.unipi.dii.inginf.lsmdb.mongolibrary.util.DateConverter;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bson.Document;
 
-import java.time.LocalDate;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import org.json.simple.JSONObject;
 import org.neo4j.driver.Record;
 
 public class UserManager {

@@ -4,30 +4,19 @@ import com.mongodb.MongoException;
 import it.unipi.dii.inginf.lsmdb.mongolibrary.MongolibraryApplication;
 import it.unipi.dii.inginf.lsmdb.mongolibrary.exceptions.BookException;
 import it.unipi.dii.inginf.lsmdb.mongolibrary.exceptions.ReviewException;
-import it.unipi.dii.inginf.lsmdb.mongolibrary.model.Book;
-import it.unipi.dii.inginf.lsmdb.mongolibrary.repository.mongo.BookMongo;
-import it.unipi.dii.inginf.lsmdb.mongolibrary.repository.mongo.ReviewMongo;
 import it.unipi.dii.inginf.lsmdb.mongolibrary.service.AdminManager;
-import it.unipi.dii.inginf.lsmdb.mongolibrary.service.CustomerManager;
 import it.unipi.dii.inginf.lsmdb.mongolibrary.util.Constants;
 import it.unipi.dii.inginf.lsmdb.mongolibrary.util.CustomBean;
 import it.unipi.dii.inginf.lsmdb.mongolibrary.util.DateConverter;
 import org.bson.Document;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.Banner;
-import org.springframework.data.domain.Page;
-import org.springframework.data.repository.query.Param;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.time.LocalDate;
-import java.time.*;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
+
 
 
 @Controller
@@ -195,22 +184,32 @@ public class AdminController {
 
         System.out.println("start: " + start);
 
-        Integer startYear = Integer.parseInt(startTime);
-        Integer startDate = (int) LocalDate.parse(start).toEpochSecond(LocalTime.NOON, ZoneOffset.UTC);
-        Integer endYear = Integer.parseInt(endTime);
-        Integer endDate = (int) LocalDate.parse(end).toEpochSecond(LocalTime.NOON, ZoneOffset.UTC);
+        Integer startYear = 0;
+        Integer startDate = 0;
+        Integer endYear = 0;
+        Integer endDate = 0;
 
         switch (numAnalytic){
             case 1:
+                startYear = Integer.parseInt(startTime);
+                startDate = DateConverter.toLong(start);
+                endYear = Integer.parseInt(endTime);
+                endDate = DateConverter.toLong(end);
                 model.addAttribute("results", adminManager.displayMostBorrowedBooksBasedOnTimeAndBirthYear(startYear, startDate, endYear, endDate, pageNumber, size));
                 break;
             case 2:
+                startDate = DateConverter.toLong(start);
+                endDate = DateConverter.toLong(end);
                 model.addAttribute("results", adminManager.displayAverageNumberOfBorrowedBooksPerUserNationalityInAPeriod(startDate, endDate, pageNumber, size));
                 break;
             case 3:
+                startDate = DateConverter.toLong(start);
+                endDate = DateConverter.toLong(end);
                 model.addAttribute("results", adminManager.displayUsersThatWroteTheMostLikedReviewsInATimePeriodWithAScore(startDate, endDate, score, pageNumber, size));
                 break;
             case 4:
+                startDate = DateConverter.toLong(start);
+                endDate = DateConverter.toLong(end);
                 model.addAttribute("results", adminManager.displayAverageNumberOfLikesPerReviewOfBooksInAPeriod(startDate, endDate, pageNumber, size));
                 break;
             default:

@@ -1,7 +1,6 @@
 package it.unipi.dii.inginf.lsmdb.mongolibrary.controller;
 
 import it.unipi.dii.inginf.lsmdb.mongolibrary.exceptions.RegisterException;
-import it.unipi.dii.inginf.lsmdb.mongolibrary.model.Customer;
 import it.unipi.dii.inginf.lsmdb.mongolibrary.service.RegisterManager;
 import it.unipi.dii.inginf.lsmdb.mongolibrary.util.Password;
 import org.springframework.stereotype.Controller;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
-import java.util.Optional;
 import org.bson.Document;
 
 @Controller

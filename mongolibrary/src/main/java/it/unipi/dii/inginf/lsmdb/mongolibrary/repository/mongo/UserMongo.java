@@ -1,17 +1,7 @@
 package it.unipi.dii.inginf.lsmdb.mongolibrary.repository.mongo;
 
-import it.unipi.dii.inginf.lsmdb.mongolibrary.model.Customer;
-import it.unipi.dii.inginf.lsmdb.mongolibrary.model.User;
 import org.bson.Document;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Component
 public class UserMongo {
