@@ -570,8 +570,8 @@ public class MongoConnectionManager implements AutoCloseable{
         if(newStatus.equals("RETURNED"))
         {
             try {
-                int copies = findDocumentByKeyValue("books", "bookTitle", bookTitle).next().getInteger("copies");
-                updateOneDocumentByKeyValue("books", "bookTitle", bookTitle, "copies", (copies + 1));
+                int copies = findDocumentByKeyValue("books", "Title", bookTitle).next().getInteger("copies");
+                updateOneDocumentByKeyValue("books", "Title", bookTitle, "copies", (copies + 1));
             } catch (MongoException me){
                 LOGGER.error("atomicModifyBorrowingListBookStatus() | error during the function: " + me.getMessage());
                 //Rollback of first update, we do not know the previous status but if we set it to "BORROWED" as default

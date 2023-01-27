@@ -48,7 +48,7 @@
             <a class="page-link" th:href="@{'/viewBooks{sort}?pageNumber=' + ${pageNumber + 1}(sort = ${sort})}">Next</a>
           </li>
           <li>
-            <form style="margin-left: 1em" th:action="@{/viewBooks}">
+            <form style="margin-left: 1em" th:action="@{/viewBooks{sort}(sort = ${sort})}">
               <label for="page">Go to page</label>
               <input class="input-group-sm" type="number" name="pageNumber" id="page"/>
               <button type="submit" class="btn btn-sm btn-primary">Go</button>
@@ -99,7 +99,7 @@
             <a class="page-link" th:href="@{'/viewBooks?pageNumber=' + ${pageNumber + 1}}">Next</a>
           </li>
           <li>
-            <form style="margin-left: 1em" th:action="@{/viewBooks}">
+            <form style="margin-left: 1em" th:action="@{/viewBooks{sort}(sort = ${sort})}">
               <label for="page2">Go to page</label>
               <input class="input-group-sm" type="number" name="pageNumber" id="page2"/>
               <button type="submit" class="btn btn-sm btn-primary">Go</button>

@@ -353,7 +353,6 @@ public class UserManager {
         List<String> follows = new ArrayList<>();
         List<Record> records = neo4JConnectionManager.showFollowers(username);
         return getStrings(follows, records);
-        // TODO: TOMMI BISOGNA INSERIRLA IN OGNI PAGINA USER
     }
 
     /**

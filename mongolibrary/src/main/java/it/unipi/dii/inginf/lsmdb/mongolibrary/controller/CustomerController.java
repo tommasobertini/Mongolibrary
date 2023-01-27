@@ -33,11 +33,6 @@ public class CustomerController {
         return "userHome";
     }
 
-    /*
-    @RequestMapping(value = {"/addReview"}, method = RequestMethod.GET)
-    public String addReview(){
-        return "addReview";
-    }*/
 
     @RequestMapping(value = {"/addReview"}, method = RequestMethod.POST)
     public String addReview(@RequestParam("bookTitle") String bookTitle,
@@ -68,7 +63,7 @@ public class CustomerController {
       //  ra.addAttribute("sessionUsername", customBean.getBean(Constants.SESSION_USERNAME));
       //  ra.addAttribute("userClass", customBean.getBean(Constants.SESSION_USER_CLASS));
 
-        return "redirect:/bookDetails";
+        return "redirect:/bookDetails" + bookTitle +"/1";
     }
 
     @GetMapping(value = "/bookDetails{titlee}/addReadingList")
@@ -89,7 +84,7 @@ public class CustomerController {
             ra.addAttribute("infoMessage", be.getMessage());
         }
 
-        return "redirect:/bookDetails";
+        return "redirect:/bookDetails" + title +"/1";
     }
 
     @GetMapping("/readingList{username}/removeFromReadingList{title}")
@@ -133,7 +128,7 @@ public class CustomerController {
             ra.addAttribute("infoMessage", be.getMessage());
         }
 
-        return "redirect:/bookDetails";
+        return "redirect:/bookDetails" + title +"/1";
     }
 
     @GetMapping("/report{username}/{title}/{description}")
@@ -184,7 +179,8 @@ public class CustomerController {
                               Model model){
 
         model.addAttribute("infoUser", customerManager.displayUser(username));
-        model.addAttribute("followers", customerManager.displayFollows(username));
+        model.addAttribute("followed", customerManager.displayFollows(username));
+        model.addAttribute("followers", customerManager.displayFollowers(username));
 
         model.addAttribute("userClass", customBean.getBean(Constants.SESSION_USER_CLASS));
         model.addAttribute("sessionUsername", customBean.getBean(Constants.SESSION_USERNAME));
@@ -256,21 +252,25 @@ public class CustomerController {
         return "suggestions";
     }
 
-    @GetMapping("/returnBook{title}")
-    public String returnBook(@PathVariable(name = "title") String title,
+    @GetMapping("/borrowingList{username}/returnBook{title}")
+    public String returnBook(@PathVariable(name = "username") String username,
+                             @PathVariable(name = "title") String title,
+                             RedirectAttributes ra,
                              Model model){
 
         try{
             customerManager.modifyBorrowingListBookStatus(customerManager.getMyCustomerData().getUsername(), title, "RETURNED");
+            System.out.println(username + " has returned the book " + title);
         }catch (MongoException me){
             System.out.println(me.getMessage());
         }
 
 
-        model.addAttribute("userClass", customBean.getBean(Constants.SESSION_USER_CLASS));
-        model.addAttribute("sessionUsername", customBean.getBean(Constants.SESSION_USERNAME));
+        ra.addAttribute("userClass", customBean.getBean(Constants.SESSION_USER_CLASS));
+        ra.addAttribute("sessionUsername", customBean.getBean(Constants.SESSION_USERNAME));
+        ra.addAttribute("username", username);
 
-        return "userHome";
+        return "redirect:/borrowingList" +  username;
     }
 
 }

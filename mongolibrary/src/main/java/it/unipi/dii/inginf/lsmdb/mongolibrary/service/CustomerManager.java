@@ -355,11 +355,11 @@ public class CustomerManager extends UserManager
      */
     public List<String> showUsersSuggestionReading(String username)
     {
-        System.out.println("DIO PUTTANA");
+
         List<String> users = new ArrayList<>();
         List<Record> records = neo4JConnectionManager.suggestUserByReadingList(username);
         for (var user : records) {
-            System.out.println("DIOCANE " + user.get(0));
+
             users.add(String.valueOf(user.get(0)));
         }
 
