@@ -19,6 +19,7 @@
 
 <div th:replace="~{fragments/headerUser :: header}">...</div>
 
+    <h1 class="mb-lg-5">Suggestions</h1>
 
     <div id="buttons">
 
@@ -41,10 +42,12 @@
 
     </div>
 
+    <h3 th:if="${suggestion == 'ok'}" th:text="${info}"></h3>
 
-    <div class="row mt-5">
-        <div class="col-lg-5 m-auto">
-            <table id="example" class="table table-bordered" >
+
+    <div class="mt-5">
+        <div class="">
+            <table class="table table-bordered w-100 text-center" th:if="${suggestion == 'ok'}">
                 <thead>
                 <tr>
                     <th>Result</th>
@@ -53,7 +56,7 @@
                 <tbody>
                 <tr th:each="result : ${results}">
 
-                    <td th:if="${type == 'books'}"><a th:href="@{/bookDetails{title}(title = ${result})}" th:text="${result}" style="color: black"></a></td>
+                    <td th:if="${type == 'books'}"><a th:href="@{/bookDetails{title}/{page}(title = ${result}, page=1)}" th:text="${result}" style="color: black"></a></td>
                     <td th:if="${type == 'users'}"><a th:href="@{/profile{username}(username=${result})}" th:text="${result}" style="color: black"></a></td>
 
                 </tr>

@@ -122,13 +122,7 @@ public class BookController {
         }else{
             userManager = CustomerManager.getInstance();
         }
-/*
-        String oldSort = (String) customBean.getBean(Constants.BOOK_SORT);
-        if(oldSort==null)
-            customBean.putBean(Constants.BOOK_SORT, sort);
-        if(!oldSort.equals(sort))
-            customBean.replaceBean(Constants.BOOK_SORT, sort);
-*/
+
         model.addAttribute("sessionUsername", customBean.getBean(Constants.SESSION_USERNAME));
         model.addAttribute("userClass", customBean.getBean(Constants.SESSION_USER_CLASS));
 

@@ -110,7 +110,6 @@ public class ListController {
                               @PathVariable String username,
                               Model model) {
 
-        //String usernameee = "x";
 
         if(customBean.getBean(Constants.SESSION_USER_CLASS) == "admin"){
             userManager = AdminManager.getInstance();

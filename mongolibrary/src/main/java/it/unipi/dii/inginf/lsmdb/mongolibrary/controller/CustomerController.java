@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.awt.event.WindowFocusListener;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,8 +61,6 @@ public class CustomerController {
             ra.addAttribute("infoMessage", e.getMessage());
         }
 
-      //  ra.addAttribute("sessionUsername", customBean.getBean(Constants.SESSION_USERNAME));
-      //  ra.addAttribute("userClass", customBean.getBean(Constants.SESSION_USER_CLASS));
 
         return "redirect:/bookDetails" + bookTitle +"/1";
     }
@@ -150,7 +149,7 @@ public class CustomerController {
         }
 
 
-        return "redirect:/bookDetails";
+        return "redirect:/bookDetails" + title +"/1";
     }
 
     @GetMapping("/like{username}/{title}")
@@ -171,7 +170,7 @@ public class CustomerController {
         }
 
 
-        return "redirect:/bookDetails";
+        return "redirect:/bookDetails" + title +"/1";
     }
 
     @GetMapping("/profile{username}")
@@ -226,28 +225,35 @@ public class CustomerController {
             case 1:
                 model.addAttribute("results", customerManager.showBooksSuggestion(username));
                 model.addAttribute("type", "books");
+                model.addAttribute("info", "Show the books suggested to the user based on the borrowing list of the followed user" );
                 break;
             case 2:
                 model.addAttribute("results", customerManager.showBooksSuggestionReading(username));
                 model.addAttribute("type", "books");
+                model.addAttribute("info", "Show the books suggested to the user based on the reading list of the followed users" );
                 break;
             case 3:
                 model.addAttribute("results", customerManager.showBooksSuggestionTime(username, DateConverter.toLong(LocalDate.now().toString())));
                 model.addAttribute("type", "books");
+                model.addAttribute("info", "Show the books suggested to the user based on the borrowing list of the followed users in the last month" );
                 break;
             case 4:
                 model.addAttribute("results", customerManager.showUsersSuggestionReading(username));
                 model.addAttribute("type", "users");
+                model.addAttribute("info", "Show the customers suggested to the user based on the book in the reading list" );
                 break;
             case 5:
                 model.addAttribute("results", customerManager.showUsersSuggestionTime(username, DateConverter.toLong(LocalDate.now().toString())));
                 model.addAttribute("type", "users");
+                model.addAttribute("info", "Show the customers suggested to the user based on the book read in the last 30 days" );
                 break;
             default:
                 System.out.println("not a suggestion");
+                model.addAttribute("info", "Not A Suggestion" );
                 break;
         }
 
+        model.addAttribute("suggestion", "ok");
         model.addAttribute("userClass", customBean.getBean(Constants.SESSION_USER_CLASS));
         model.addAttribute("sessionUsername", customBean.getBean(Constants.SESSION_USERNAME));
 
