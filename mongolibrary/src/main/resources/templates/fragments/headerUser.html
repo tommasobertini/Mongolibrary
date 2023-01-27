@@ -6,7 +6,7 @@
   <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
     <li><a th:href="@{/userHome}" class="nav-link px-2 link-secondary fs-3">Home</a></li>
     <li><a th:href="@{/searchBook}" class="nav-link px-2 link-secondary fs-3">Search</a></li>
-    <li><a th:href="@{/viewBooks}" class="nav-link px-2 link-secondary fs-3">View</a></li>
+    <li><a th:href="@{/viewBooks{sort}(sort = ${'Title'})}" class="nav-link px-2 link-secondary fs-3">View</a></li>
     <li><a th:href="@{/readingList{username}(username=${sessionUsername})}" class="nav-link px-2 link-secondary fs-3">Reading List</a></li>
     <li><a th:href="@{/borrowingList{username}(username=${sessionUsername})}" class="nav-link px-2 link-secondary fs-3">Borrowing List</a></li>
   </ul>

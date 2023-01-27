@@ -35,7 +35,7 @@
           <tbody>
           <tr th:each="book : ${books}">
             <td>img</td>
-            <td><a th:href="@{/bookDetails{title}(title = ${book})}" th:text="${book}" style="color: black"></a></td>
+            <td><a th:href="@{/bookDetails{title}/{page}(title = ${book}, page = 1)}" th:text="${book}" style="color: black"></a></td>
 
             <td th:if="${username} == ${sessionUsername}">
               <form th:action="@{/readingList{username}/removeFromReadingList{title}(username=${username}, title = ${book})}" method="get">
