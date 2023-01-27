@@ -206,6 +206,24 @@ public class CustomerController {
         return "redirect:/viewUsers";
     }
 
+    @GetMapping("/removeFollow{username}")
+    public String removeFollow(@PathVariable(name = "username") String username,
+                         Model model){
+
+        //model.addAttribute("infoUser", customerManager.displayUser(username));
+        String myUsername = (String) customBean.getBean(Constants.SESSION_USERNAME);
+        if(customerManager.removeFromFollowed(myUsername, username))
+            System.out.println("unfollowed");
+        else
+            System.out.println("error follow");
+
+        model.addAttribute("userClass", customBean.getBean(Constants.SESSION_USER_CLASS));
+        model.addAttribute("sessionUsername", customBean.getBean(Constants.SESSION_USERNAME));
+        model.addAttribute("username", username);
+
+        return "redirect:/viewUsers";
+    }
+
     @GetMapping("/suggestions")
     public String suggestions(Model model){
         model.addAttribute("userClass", customBean.getBean(Constants.SESSION_USER_CLASS));

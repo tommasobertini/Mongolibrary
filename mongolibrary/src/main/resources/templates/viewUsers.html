@@ -37,6 +37,7 @@
                     <th>Action2</th>
                     <th:block th:if="${userClass == 'customer'}">
                         <th>Follow</th>
+                        <th>Unfollow</th>
                     </th:block>
                     <th:block th:if="${userClass == 'admin'}">
                         <th>Status</th>
@@ -63,6 +64,11 @@
                     <td th:if="${userClass == 'customer'}">
                         <form th:action="@{/follow{username}(username = ${customer.username})}" method="get">
                             <button class="btn btn-primary btn-sm" type="submit">Follow</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form th:action="@{/removeFollow{username}(username = ${customer.username})}" method="get">
+                            <button class="btn btn-primary btn-sm" type="submit">Unfollow</button>
                         </form>
                     </td>
                     <th:block th:if="${userClass == 'admin'}">
