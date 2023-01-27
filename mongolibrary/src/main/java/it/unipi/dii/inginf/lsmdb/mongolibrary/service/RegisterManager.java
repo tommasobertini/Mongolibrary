@@ -50,7 +50,8 @@ public class RegisterManager {
         var result = neo4JConnectionManager.register(user.getString("username"), user.getString("nationality"), user.getInteger("birthYear"));
         if (!result) {
             System.out.println("mongodb rollback");
-            //TODO: MONGODB ROLLBACK
+            //Rollback in MongoDB to remove the book added
+            mongoConnectionManager.removeElement("customers", "username", user.getString("username"));
         }
     }
 }
