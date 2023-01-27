@@ -9,6 +9,12 @@
       color: #deb217;
       font-size: 2em;
     }
+
+    .sorting{
+      display: flex;
+      flex-direction: row;
+      gap: 2em
+    }
   </style>
 
 </head>
@@ -56,9 +62,11 @@
           </li>
         </ul>
 
-        <p><a th:href="@{/viewBooks{sort}(sort = ${'Title'})}" th:text="'By Title'"></a></p>
-        <p><a th:href="@{/viewBooks{sort}(sort = ${'score'})}" th:text="'By Score'"></a></p>
-
+        <div class="sorting">
+          <p>Sort:</p>
+          <p><a th:href="@{/viewBooks{sort}(sort = ${'Title'})}" th:text="'By Title'"></a></p>
+          <p><a th:href="@{/viewBooks{sort}(sort = ${'score'})}" th:text="'By Score'"></a></p>
+        </div>
 
       </nav>
 

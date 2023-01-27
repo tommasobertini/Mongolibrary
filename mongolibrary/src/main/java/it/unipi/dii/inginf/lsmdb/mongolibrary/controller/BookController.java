@@ -27,6 +27,7 @@ public class BookController {
 
         model.addAttribute("userClass", customBean.getBean(Constants.SESSION_USER_CLASS));
         model.addAttribute("sessionUsername", customBean.getBean(Constants.SESSION_USERNAME));
+        model.addAttribute("pageNumber", 0);
 
         System.out.println(customBean.getBean(Constants.SESSION_USERNAME));
         return "searchBook";

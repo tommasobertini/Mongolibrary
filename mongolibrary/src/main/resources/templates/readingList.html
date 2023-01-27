@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <title>Reading List</title>
   <link th:href="@{/styles/bootstrap.min.css}" rel="stylesheet">
+
+  <style>
+    td{
+     /* display: flex;*/
+      justify-content: center;
+      align-items: center;
+    }
+  </style>
 </head>
 
 <body class="text-center flex-column">
@@ -26,15 +34,12 @@
             <th>Image</th>
             <th>Title</th>
             <th th:if="${username} == ${sessionUsername}">Edit</th>
-            <!--
-            <th>Start date</th>
-            <th>Salary</th>
-            -->
+
           </tr>
           </thead>
           <tbody>
           <tr th:each="book : ${books}">
-            <td>img</td>
+            <td><img style="width: 20%; height: 20%;" alt="100%x200" th:src="@{/images/book-sample.png}" ></td>
             <td><a th:href="@{/bookDetails{title}/{page}(title = ${book}, page = 1)}" th:text="${book}" style="color: black"></a></td>
 
             <td th:if="${username} == ${sessionUsername}">
@@ -42,10 +47,7 @@
                 <button class="btn btn-danger btn-sm" type="submit">Remove</button>
               </form>
             </td>
-            <!--
-            <td th:text="${#dates.format(employee.startDate, 'dd.MM.yyyy')}">Start date</td>
-            <td th:text="'$' + ${#numbers.formatDecimal(employee.salary, 0, 'COMMA', 2, 'POINT')}">Salary</td>
-            -->
+
           </tr>
           </tbody>
         </table>
