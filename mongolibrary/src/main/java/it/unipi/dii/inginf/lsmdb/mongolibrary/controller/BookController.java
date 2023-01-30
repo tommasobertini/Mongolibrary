@@ -47,8 +47,8 @@ public class BookController {
         model.addAttribute("userClass", customBean.getBean(Constants.SESSION_USER_CLASS));
         model.addAttribute("sessionUsername", customBean.getBean(Constants.SESSION_USERNAME));
 
-       // model.addAttribute("retreivedBooks", userManager.displayBooksSorted(parameter, Integer.parseInt(howMany), order));
-        model.addAttribute("retreivedBooks", userManager.displayBooksSorted(parameter, "", 1, Integer.parseInt(howMany), order));
+        model.addAttribute("retreivedBooks", userManager.displayBooksSorted(parameter,1, Integer.parseInt(howMany), order));
+        //model.addAttribute("retreivedBooks", userManager.displayBooksSorted(parameter, "", 1, Integer.parseInt(howMany), order));
         model.addAttribute("retreive", "true");
 
         System.out.println(customBean.getBean(Constants.SESSION_USER_CLASS));

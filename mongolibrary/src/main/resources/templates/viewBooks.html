@@ -92,29 +92,28 @@
         </div>
       </div>
 
-      <nav aria-label="Page navigation" class="paging">
+      <nav aria-label="Page navigation" class="paging mb-3">
         <ul class="pagination">
           <li class="page-item" th:classappend="${pageNumber.intValue() <= 1 ? 'disabled' : ''}">
-            <a class="page-link" th:href="@{'/viewBooks?pageNumber=' + ${pageNumber - 1}}">Previous</a>
+            <a class="page-link" th:href="@{'/viewBooks{sort}?pageNumber=' + ${pageNumber - 1}(sort = ${sort})}">Previous</a>
           </li>
 
           <li class="page-item disabled">
-            <a class="page-link" th:href="@{'/viewBooks?pageNumber=' + ${pageNumber}}"
+            <a class="page-link" th:href="@{'/viewBooks{sort}?pageNumber=' + ${pageNumber}(sort = ${sort})}"
                th:text="${pageNumber}"></a>
           </li>
 
           <li class="page-item">
-            <a class="page-link" th:href="@{'/viewBooks?pageNumber=' + ${pageNumber + 1}}">Next</a>
+            <a class="page-link" th:href="@{'/viewBooks{sort}?pageNumber=' + ${pageNumber + 1}(sort = ${sort})}">Next</a>
           </li>
           <li>
             <form style="margin-left: 1em" th:action="@{/viewBooks{sort}(sort = ${sort})}">
-              <label for="page2">Go to page</label>
-              <input class="input-group-sm" type="number" name="pageNumber" id="page2"/>
+              <label for="page1">Go to page</label>
+              <input class="input-group-sm" type="number" name="pageNumber" id="page1"/>
               <button type="submit" class="btn btn-sm btn-primary">Go</button>
             </form>
           </li>
         </ul>
-
       </nav>
 
 

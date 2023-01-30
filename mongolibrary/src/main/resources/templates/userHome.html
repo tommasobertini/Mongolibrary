@@ -11,9 +11,8 @@
 
     <div th:replace="~{fragments/headerUser :: header}">...</div>
 
-
+    <h1 class="title mb-5" th:text="'Welcome ' + ${sessionUsername} + ' !'">...</h1>
     <main class="list-group-horizontal-md w-200 m-auto">
-        <h1 class="title mb-5" th:text="'Welcome ' + ${sessionUsername} + ' !'">...</h1>
         <!--
           <p>Click <a th:href="@{/addBook}">here</a> to add a new book.</p>
         -->
