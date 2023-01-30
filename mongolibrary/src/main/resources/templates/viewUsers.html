@@ -66,7 +66,7 @@
                             <button class="btn btn-primary btn-sm" type="submit">Follow</button>
                         </form>
                     </td>
-                    <td>
+                    <td th:if="${userClass == 'customer'}">
                         <form th:action="@{/removeFollow{username}(username = ${customer.username})}" method="get">
                             <button class="btn btn-primary btn-sm" type="submit">Unfollow</button>
                         </form>
